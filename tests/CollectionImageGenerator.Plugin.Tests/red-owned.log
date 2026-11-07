@@ -1,0 +1,16 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Plugin -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\bin\Debug\net10.0\CollectionImageGenerator.Plugin.dll
+  CollectionImageGenerator.Plugin.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.57]     CollectionImageGenerator.Plugin.Tests.ProcessorTests.Owned_image_is_skipped_when_unchanged_and_regenerated_when_source_bytes_change [FAIL]
+  Failed CollectionImageGenerator.Plugin.Tests.ProcessorTests.Owned_image_is_skipped_when_unchanged_and_regenerated_when_source_bytes_change [36 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   1
+  Stack Trace:
+     at CollectionImageGenerator.Plugin.Tests.ProcessorTests.Owned_image_is_skipped_when_unchanged_and_regenerated_when_source_bytes_change() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\ProcessorTests.cs:line 66
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:     1, Passed:    13, Skipped:     0, Total:    14, Duration: 419 ms - CollectionImageGenerator.Plugin.Tests.dll (net10.0)

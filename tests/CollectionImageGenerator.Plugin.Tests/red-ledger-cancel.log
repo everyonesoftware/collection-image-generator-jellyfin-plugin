@@ -1,0 +1,15 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Plugin -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\bin\Debug\net10.0\CollectionImageGenerator.Plugin.dll
+  CollectionImageGenerator.Plugin.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.52]     CollectionImageGenerator.Plugin.Tests.LedgerTests.Loading_with_cancelled_token_propagates_even_when_no_ledger_exists [FAIL]
+  Failed CollectionImageGenerator.Plugin.Tests.LedgerTests.Loading_with_cancelled_token_propagates_even_when_no_ledger_exists [4 ms]
+  Error Message:
+   Assert.ThrowsAny() Failure: No exception was thrown
+Expected: typeof(System.OperationCanceledException)
+  Stack Trace:
+     at CollectionImageGenerator.Plugin.Tests.LedgerTests.Loading_with_cancelled_token_propagates_even_when_no_ledger_exists() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\LedgerTests.cs:line 17
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 863 ms - CollectionImageGenerator.Plugin.Tests.dll (net10.0)

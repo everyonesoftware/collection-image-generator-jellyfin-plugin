@@ -1,0 +1,74 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Core.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.23]     CollectionImageGenerator.Core.Tests.RendererTests.EmptyAndAllBrokenAreExplicitErrors [FAIL]
+[xUnit.net 00:00:00.25]     CollectionImageGenerator.Core.Tests.RendererTests.CorruptAndMissingPostersAreSkipped [FAIL]
+[xUnit.net 00:00:00.26]     CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 1) [FAIL]
+[xUnit.net 00:00:00.27]     CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 2) [FAIL]
+[xUnit.net 00:00:00.27]     CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 3) [FAIL]
+[xUnit.net 00:00:00.37]     CollectionImageGenerator.Core.Tests.RendererTests.CoverCropKeepsCenteredRegionWithoutStretchingOrOddSizeGaps [FAIL]
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.EmptyAndAllBrokenAreExplicitErrors [19 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.ArgumentOutOfRangeException)
+---- System.ArgumentOutOfRangeException : Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.EmptyAndAllBrokenAreExplicitErrors() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 38
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at System.SZArrayHelper.get_Item[T](Int32 index)
+   at CollectionImageGenerator.Core.CollageRenderer.Render(IReadOnlyList`1 posterPaths, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\CollageRenderer.cs:line 10
+   at CollectionImageGenerator.Core.Tests.RendererTests.<>c.<EmptyAndAllBrokenAreExplicitErrors>b__6_0() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 38
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.CorruptAndMissingPostersAreSkipped [22 ms]
+  Error Message:
+   System.ArgumentNullException : Value cannot be null. (Parameter 'bitmap')
+  Stack Trace:
+     at SkiaSharp.SKImage.FromBitmap(SKBitmap bitmap)
+   at SkiaSharp.SKCanvas.DrawBitmap(SKBitmap bitmap, SKRect dest, SKPaint paint)
+   at CollectionImageGenerator.Core.CollageRenderer.Render(IReadOnlyList`1 posterPaths, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\CollageRenderer.cs:line 13
+   at CollectionImageGenerator.Core.Tests.RendererTests.CorruptAndMissingPostersAreSkipped() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 32
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 1) [14 ms]
+  Error Message:
+   System.ArgumentOutOfRangeException : Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+  Stack Trace:
+     at System.SZArrayHelper.get_Item[T](Int32 index)
+   at CollectionImageGenerator.Core.CollageRenderer.Render(IReadOnlyList`1 posterPaths, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\CollageRenderer.cs:line 10
+   at CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(Int32 count) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 23
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 2) [6 ms]
+  Error Message:
+   System.ArgumentOutOfRangeException : Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+  Stack Trace:
+     at System.SZArrayHelper.get_Item[T](Int32 index)
+   at CollectionImageGenerator.Core.CollageRenderer.Render(IReadOnlyList`1 posterPaths, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\CollageRenderer.cs:line 10
+   at CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(Int32 count) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 23
+   at InvokeStub_RendererTests.AvailablePostersRepeatToFour(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 3) [6 ms]
+  Error Message:
+   System.ArgumentOutOfRangeException : Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+  Stack Trace:
+     at System.SZArrayHelper.get_Item[T](Int32 index)
+   at CollectionImageGenerator.Core.CollageRenderer.Render(IReadOnlyList`1 posterPaths, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\CollageRenderer.cs:line 10
+   at CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(Int32 count) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 23
+   at InvokeStub_RendererTests.AvailablePostersRepeatToFour(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.CoverCropKeepsCenteredRegionWithoutStretchingOrOddSizeGaps [94 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: #ff00ff00
+Actual:   #ffff0000
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.CoverCropKeepsCenteredRegionWithoutStretchingOrOddSizeGaps() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     6, Passed:     0, Skipped:     0, Total:     6, Duration: 180 ms - CollectionImageGenerator.Core.Tests.dll (net10.0)

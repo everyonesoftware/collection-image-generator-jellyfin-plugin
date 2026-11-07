@@ -1,0 +1,33 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Core.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.25]     CollectionImageGenerator.Core.Tests.SelectionTests.MaximumRealDateStillPrecedesMissingAndConflictingDuplicateIsCanonical [FAIL]
+[xUnit.net 00:00:00.26]     CollectionImageGenerator.Core.Tests.RendererTests.MalformedPathIsSkippedInFavorOfUsableImage [FAIL]
+  Failed CollectionImageGenerator.Core.Tests.SelectionTests.MaximumRealDateStillPrecedesMissingAndConflictingDuplicateIsCanonical [14 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "1"
+Actual:   "0"
+           ↑ (pos 0)
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.SelectionTests.MaximumRealDateStillPrecedesMissingAndConflictingDuplicateIsCanonical() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\SelectionTests.cs:line 36
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.MalformedPathIsSkippedInFavorOfUsableImage [39 ms]
+  Error Message:
+   System.ArgumentException : Null character in path. (Parameter 'path')
+  Stack Trace:
+     at System.IO.Path.GetFullPath(String path)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   at CollectionImageGenerator.Core.CollageRenderer.Render(IReadOnlyList`1 posterPaths, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\CollageRenderer.cs:line 17
+   at CollectionImageGenerator.Core.Tests.RendererTests.MalformedPathIsSkippedInFavorOfUsableImage() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 38
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     2, Passed:     0, Skipped:     0, Total:     2, Duration: 57 ms - CollectionImageGenerator.Core.Tests.dll (net10.0)

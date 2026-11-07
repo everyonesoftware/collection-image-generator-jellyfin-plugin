@@ -1,0 +1,47 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: dotnet restore
+      - run: dotnet build --configuration Release --no-restore
+      - run: dotnet test --configuration Release --no-build --logger trx
+      - run: python -m unittest discover -s tools -p "test_*.py" -v
+      - run: node --test tools/settings.test.mjs
+      - run: python tools/package_plugin.py
+      - run: dotnet run --project tools/PluginLoadProbe --configuration Release --no-build -- artifacts/collection-image-generator-0.1.0.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: collection-image-generator-${{ runner.os }}
+          path: artifacts/*
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ runner.os }}
+          path: '**/TestResults/*.trx'
+          if-no-files-found: ignore

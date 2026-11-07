@@ -1,0 +1,58 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Core.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.31]     CollectionImageGenerator.Core.Tests.RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(width: 300, height: 450, length: 1000) [FAIL]
+[xUnit.net 00:00:00.33]     CollectionImageGenerator.Core.Tests.RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(width: 64, height: 64, length: 4096) [FAIL]
+[xUnit.net 00:00:00.33]     CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Bottom) [FAIL]
+[xUnit.net 00:00:00.34]     CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Middle) [FAIL]
+[xUnit.net 00:00:00.35]     CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Top) [FAIL]
+[xUnit.net 00:00:00.62]     CollectionImageGenerator.Core.Tests.RendererTests.TemplateSubstitutesCollectionNameAndCanBeDisabled [FAIL]
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(width: 300, height: 450, length: 1000) [53 ms]
+  Error Message:
+   Assert.NotEmpty() Failure: Collection was empty
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(Int32 width, Int32 height, Int32 length) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 85
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(width: 64, height: 64, length: 4096) [4 ms]
+  Error Message:
+   Assert.NotEmpty() Failure: Collection was empty
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(Int32 width, Int32 height, Int32 length) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 85
+   at InvokeStub_RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Bottom) [13 ms]
+  Error Message:
+   Assert.NotEmpty() Failure: Collection was empty
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(TextPosition position) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 66
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Middle) [12 ms]
+  Error Message:
+   Assert.NotEmpty() Failure: Collection was empty
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(TextPosition position) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 66
+   at InvokeStub_RendererTests.TextWrapsInsideVisiblePositionedBand(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Top) [10 ms]
+  Error Message:
+   Assert.NotEmpty() Failure: Collection was empty
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(TextPosition position) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 66
+   at InvokeStub_RendererTests.TextWrapsInsideVisiblePositionedBand(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.TemplateSubstitutesCollectionNameAndCanBeDisabled [270 ms]
+  Error Message:
+   Assert.NotEqual() Failure: Collections are equal
+Expected: Not [137, 80, 78, 71, 13, ···]
+Actual:       [137, 80, 78, 71, 13, ···]
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.TemplateSubstitutesCollectionNameAndCanBeDisabled() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 105
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     6, Passed:     0, Skipped:     0, Total:     6, Duration: 380 ms - CollectionImageGenerator.Core.Tests.dll (net10.0)

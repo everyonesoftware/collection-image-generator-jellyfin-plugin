@@ -1,0 +1,15 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Plugin -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\bin\Debug\net10.0\CollectionImageGenerator.Plugin.dll
+  CollectionImageGenerator.Plugin.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.89]     CollectionImageGenerator.Plugin.Tests.ProcessorTests.Corrupt_ledger_blocks_all_writes_even_with_explicit_overwrite_and_is_reported [FAIL]
+  Failed CollectionImageGenerator.Plugin.Tests.ProcessorTests.Corrupt_ledger_blocks_all_writes_even_with_explicit_overwrite_and_is_reported [17 ms]
+  Error Message:
+   Assert.Throws() Failure: No exception was thrown
+Expected: typeof(System.IO.IOException)
+  Stack Trace:
+     at CollectionImageGenerator.Plugin.Tests.ProcessorTests.Corrupt_ledger_blocks_all_writes_even_with_explicit_overwrite_and_is_reported() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\ProcessorTests.cs:line 123
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:     1, Passed:    16, Skipped:     0, Total:    17, Duration: 697 ms - CollectionImageGenerator.Plugin.Tests.dll (net10.0)

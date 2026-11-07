@@ -1,0 +1,21 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Plugin -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\bin\Debug\net10.0\CollectionImageGenerator.Plugin.dll
+  CollectionImageGenerator.Plugin.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.61]     CollectionImageGenerator.Plugin.Tests.ProcessorTests.Failure_does_not_abort_other_collections_and_task_reports_failure [FAIL]
+  Failed CollectionImageGenerator.Plugin.Tests.ProcessorTests.Failure_does_not_abort_other_collections_and_task_reports_failure [8 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.AggregateException)
+Actual:   typeof(System.IO.IOException)
+---- System.IO.IOException : Simulated Jellyfin save failure
+  Stack Trace:
+     at CollectionImageGenerator.Plugin.Tests.ProcessorTests.Failure_does_not_abort_other_collections_and_task_reports_failure() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\ProcessorTests.cs:line 77
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at CollectionImageGenerator.Plugin.Tests.ProcessorTests.FakeLibrary.SavePrimaryAsync(BaseItem item, Byte[] png, CancellationToken cancellationToken) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\ProcessorTests.cs:line 116
+   at CollectionImageGenerator.Plugin.CollectionProcessor.ProcessAsync(BaseItem collection, PluginConfiguration config, CancellationToken cancellationToken) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\CollectionProcessor.cs:line 63
+   at CollectionImageGenerator.Plugin.CollectionProcessor.RunAsync(IProgress`1 progress, CancellationToken cancellationToken) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\CollectionProcessor.cs:line 25
+
+Failed!  - Failed:     1, Passed:    14, Skipped:     0, Total:    15, Duration: 465 ms - CollectionImageGenerator.Plugin.Tests.dll (net10.0)

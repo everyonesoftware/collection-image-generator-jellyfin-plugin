@@ -1,0 +1,24 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Plugin -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\bin\Debug\net10.0\CollectionImageGenerator.Plugin.dll
+  CollectionImageGenerator.Plugin.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.65]     CollectionImageGenerator.Plugin.Tests.ProcessorTests.Shared_worker_serializes_concurrent_runs_including_ledger_and_save [FAIL]
+  Failed CollectionImageGenerator.Plugin.Tests.ProcessorTests.Shared_worker_serializes_concurrent_runs_including_ledger_and_save [12 ms]
+  Error Message:
+   System.AggregateException : Some collection artwork updates failed; see server log for collection IDs. (The process cannot access the file 'C:\Users\dansc\AppData\Local\hermes\cache\scratch\cig-processor-25b42a94-6d18-466b-bc88-d0d046e034ff\8670ca6034bd48508a92a07c2acf7f74.png' because it is being used by another process.)
+---- System.IO.IOException : The process cannot access the file 'C:\Users\dansc\AppData\Local\hermes\cache\scratch\cig-processor-25b42a94-6d18-466b-bc88-d0d046e034ff\8670ca6034bd48508a92a07c2acf7f74.png' because it is being used by another process.
+  Stack Trace:
+     at CollectionImageGenerator.Plugin.CollectionProcessor.RunAsync(IProgress`1 progress, CancellationToken cancellationToken) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\CollectionProcessor.cs:line 36
+   at CollectionImageGenerator.Plugin.Tests.ProcessorTests.Shared_worker_serializes_concurrent_runs_including_ledger_and_save() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\ProcessorTests.cs:line 111
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.File.OpenHandle(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.<WriteAllBytesAsync>g__Core|103_0(String path, ReadOnlyMemory`1 bytes, CancellationToken cancellationToken)
+   at CollectionImageGenerator.Plugin.Tests.ProcessorTests.FakeLibrary.SavePrimaryAsync(BaseItem item, Byte[] png, CancellationToken cancellationToken) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\ProcessorTests.cs:line 148
+   at CollectionImageGenerator.Plugin.CollectionProcessor.ProcessAsync(BaseItem collection, PluginConfiguration config, CancellationToken cancellationToken) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\CollectionProcessor.cs:line 72
+   at CollectionImageGenerator.Plugin.CollectionProcessor.RunAsync(IProgress`1 progress, CancellationToken cancellationToken) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\CollectionProcessor.cs:line 26
+
+Failed!  - Failed:     1, Passed:    15, Skipped:     0, Total:    16, Duration: 492 ms - CollectionImageGenerator.Plugin.Tests.dll (net10.0)

@@ -1,0 +1,72 @@
+  Determining projects to restore...
+  Restored C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\CollectionImageGenerator.Core.Tests.csproj (in 10.21 sec).
+  1 of 2 projects are up-to-date for restore.
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Core.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.30]     CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "ABCD", owned: "abcd", overwrite: False, expected: True) [FAIL]
+[xUnit.net 00:00:00.32]     CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: null, overwrite: False, expected: False) [FAIL]
+[xUnit.net 00:00:00.32]     CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "", owned: null, overwrite: False, expected: True) [FAIL]
+[xUnit.net 00:00:00.32]     CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: "generated", overwrite: True, expected: True) [FAIL]
+[xUnit.net 00:00:00.32]     CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: "generated", overwrite: False, expected: False) [FAIL]
+[xUnit.net 00:00:00.32]     CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: null, owned: null, overwrite: False, expected: True) [FAIL]
+[xUnit.net 00:00:00.33]     CollectionImageGenerator.Core.Tests.RendererTests.DefaultSizeHasExactFourQuadrantColors [FAIL]
+  Failed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "ABCD", owned: "abcd", overwrite: False, expected: True) [4 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.ArtworkPolicy.CanReplace(String currentHash, String ownedHash, Boolean overwriteExisting) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\ArtworkPolicy.cs:line 5
+   at CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(String current, String owned, Boolean overwrite, Boolean expected) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\PolicyTests.cs:line 13
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: null, overwrite: False, expected: False) [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.ArtworkPolicy.CanReplace(String currentHash, String ownedHash, Boolean overwriteExisting) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\ArtworkPolicy.cs:line 5
+   at CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(String current, String owned, Boolean overwrite, Boolean expected) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\PolicyTests.cs:line 13
+   at InvokeStub_PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "", owned: null, overwrite: False, expected: True) [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.ArtworkPolicy.CanReplace(String currentHash, String ownedHash, Boolean overwriteExisting) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\ArtworkPolicy.cs:line 5
+   at CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(String current, String owned, Boolean overwrite, Boolean expected) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\PolicyTests.cs:line 13
+   at InvokeStub_PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: "generated", overwrite: True, expected: True) [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.ArtworkPolicy.CanReplace(String currentHash, String ownedHash, Boolean overwriteExisting) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\ArtworkPolicy.cs:line 5
+   at CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(String current, String owned, Boolean overwrite, Boolean expected) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\PolicyTests.cs:line 13
+   at InvokeStub_PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: "generated", overwrite: False, expected: False) [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.ArtworkPolicy.CanReplace(String currentHash, String ownedHash, Boolean overwriteExisting) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\ArtworkPolicy.cs:line 5
+   at CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(String current, String owned, Boolean overwrite, Boolean expected) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\PolicyTests.cs:line 13
+   at InvokeStub_PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: null, owned: null, overwrite: False, expected: True) [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.ArtworkPolicy.CanReplace(String currentHash, String ownedHash, Boolean overwriteExisting) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\ArtworkPolicy.cs:line 5
+   at CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(String current, String owned, Boolean overwrite, Boolean expected) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\PolicyTests.cs:line 13
+   at InvokeStub_PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.DefaultSizeHasExactFourQuadrantColors [39 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.CollageRenderer.Render(IReadOnlyList`1 posterPaths, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\CollageRenderer.cs:line 5
+   at CollectionImageGenerator.Core.Tests.RendererTests.DefaultSizeHasExactFourQuadrantColors() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 22
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     7, Passed:     0, Skipped:     0, Total:     7, Duration: 53 ms - CollectionImageGenerator.Core.Tests.dll (net10.0)

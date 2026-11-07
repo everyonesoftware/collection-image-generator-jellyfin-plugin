@@ -1,0 +1,16 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Plugin -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\bin\Debug\net10.0\CollectionImageGenerator.Plugin.dll
+  CollectionImageGenerator.Plugin.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.37]     CollectionImageGenerator.Plugin.Tests.LedgerTests.A_file_blocking_the_data_directory_is_unreadable_not_an_empty_trusted_ledger [FAIL]
+  Failed CollectionImageGenerator.Plugin.Tests.LedgerTests.A_file_blocking_the_data_directory_is_unreadable_not_an_empty_trusted_ledger [7 ms]
+  Error Message:
+   Assert.False() Failure
+Expected: False
+Actual:   True
+  Stack Trace:
+     at CollectionImageGenerator.Plugin.Tests.LedgerTests.A_file_blocking_the_data_directory_is_unreadable_not_an_empty_trusted_ledger() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\LedgerTests.cs:line 29
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:     1, Passed:    23, Skipped:     0, Total:    24, Duration: 825 ms - CollectionImageGenerator.Plugin.Tests.dll (net10.0)

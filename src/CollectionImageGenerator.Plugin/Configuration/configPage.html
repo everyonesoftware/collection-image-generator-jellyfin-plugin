@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head><title>Collection Image Generator</title></head>
+<body>
+<div id="CollectionImageGeneratorConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox,emby-select">
+    <div data-role="content"><div class="content-primary">
+        <h1>Collection Image Generator</h1>
+        <p>Create collection collages from up to four local member posters. No remote images are downloaded.</p>
+        <form id="CollectionImageGeneratorConfigForm">
+            <div class="checkboxContainer checkboxContainer-withDescription">
+                <label><input is="emby-checkbox" type="checkbox" id="Enabled" checked /><span>Enabled</span></label>
+                <div class="fieldDescription checkboxFieldDescription">Allow daily, manual and post-scan generation.</div>
+            </div>
+            <div class="checkboxContainer checkboxContainer-withDescription">
+                <label><input is="emby-checkbox" type="checkbox" id="RunAfterScan" checked /><span>Run after library scans</span></label>
+            </div>
+            <div class="selectContainer">
+                <label class="selectLabel" for="SelectionMode">Member poster order</label>
+                <select is="emby-select" id="SelectionMode">
+                    <option value="ReleaseDate">Release date (oldest first)</option>
+                    <option value="Alphabetical">Alphabetical</option>
+                    <option value="StableRandom">Stable random</option>
+                </select>
+                <div class="fieldDescription">The same collection and members produce the same random order. Collections with fewer than four usable posters repeat them.</div>
+            </div>
+            <div class="checkboxContainer checkboxContainer-withDescription">
+                <label><input is="emby-checkbox" type="checkbox" id="EnableText" /><span>Overlay collection text</span></label>
+            </div>
+            <div class="inputContainer">
+                <label class="inputLabel" for="TextTemplate">Text template</label>
+                <input is="emby-input" type="text" id="TextTemplate" value="{name}" maxlength="4096" />
+                <div class="fieldDescription">Use {name} for the collection name. Text is disabled by default.</div>
+            </div>
+            <div class="selectContainer">
+                <label class="selectLabel" for="TextPosition">Text position</label>
+                <select is="emby-select" id="TextPosition">
+                    <option value="Top">Top</option><option value="Middle">Middle</option><option value="Bottom" selected>Bottom</option>
+                </select>
+            </div>
+            <div class="inputContainer">
+                <label class="inputLabel" for="FontSize">Font size (pixels)</label>
+                <input is="emby-input" type="number" id="FontSize" value="80" min="8" max="512" step="1" required />
+            </div>
+            <div class="inputContainer">
+                <label class="inputLabel" for="Width">Output width (pixels)</label>
+                <input is="emby-input" type="number" id="Width" value="1000" min="64" max="4096" step="1" required />
+            </div>
+            <div class="inputContainer">
+                <label class="inputLabel" for="Height">Output height (pixels)</label>
+                <input is="emby-input" type="number" id="Height" value="1500" min="64" max="4096" step="1" required />
+                <div class="fieldDescription">Maximum 8,388,608 pixels in total.</div>
+            </div>
+            <fieldset style="border:2px solid #e6a23c;padding:1em;margin:1.5em 0;">
+                <legend><strong>Artwork protection</strong></legend>
+                <p><strong>Warning: enabling overwrite can permanently replace custom collection artwork.</strong> Keep this off unless you intend to replace your existing images.</p>
+                <div class="checkboxContainer checkboxContainer-withDescription">
+                    <label><input is="emby-checkbox" type="checkbox" id="OverwriteExisting" /><span>Overwrite existing collection artwork</span></label>
+                    <div class="fieldDescription checkboxFieldDescription">Off by default. Normally only missing primaries or unchanged plugin-owned images can be generated. Unreadable images and untrusted ownership records are never overwritten.</div>
+                </div>
+            </fieldset>
+            <div><button is="emby-button" type="submit" class="raised button-submit block"><span>Save</span></button></div>
+        </form>
+        <h2>Run manually</h2>
+        <p>Save settings, then open scheduled tasks and run <strong>Generate collection images</strong>. The daily default is 03:00 server-local time; you can change its trigger there.</p>
+        <p><a is="emby-linkbutton" class="raised button-link" href="#/dashboard/tasks">Open scheduled tasks</a></p>
+        <p id="CollectionImageGeneratorStatus" role="status" aria-live="polite"></p>
+    </div></div>
+    <script type="text/javascript">
+    (function () {
+        'use strict';
+        const pluginId = 'f8a5df17-f0b4-4eab-9144-a46ea55c2b28';
+        const page = document.querySelector('#CollectionImageGeneratorConfigPage');
+        const form = page.querySelector('#CollectionImageGeneratorConfigForm');
+        const status = page.querySelector('#CollectionImageGeneratorStatus');
+        const booleans = ['Enabled', 'RunAfterScan', 'EnableText', 'OverwriteExisting'];
+        const numbers = ['FontSize', 'Width', 'Height'];
+        const strings = ['SelectionMode', 'TextTemplate', 'TextPosition'];
+        const defaults = { Enabled: true, RunAfterScan: true, EnableText: false, OverwriteExisting: false, FontSize: 80, Width: 1000, Height: 1500, SelectionMode: 'ReleaseDate', TextTemplate: '{name}', TextPosition: 'Bottom' };
+        const enumNames = { SelectionMode: ['ReleaseDate', 'Alphabetical', 'StableRandom'], TextPosition: ['Top', 'Middle', 'Bottom'] };
+        const field = name => page.querySelector('#' + name);
+        let loaded = false;
+        const save = form.querySelector('button[type="submit"]');
+        save.disabled = true;
+        page.addEventListener('pageshow', async function () {
+            loaded = false;
+            save.disabled = true;
+            Dashboard.showLoadingMsg();
+            try {
+                const config = await ApiClient.getPluginConfiguration(pluginId);
+                booleans.forEach(name => { field(name).checked = config[name] ?? defaults[name]; });
+                numbers.concat(strings).forEach(name => {
+                    let value = config[name] ?? defaults[name];
+                    if (enumNames[name] && typeof value === 'number') value = enumNames[name][value];
+                    field(name).value = value;
+                });
+                loaded = true;
+                save.disabled = false;
+                status.textContent = '';
+            } catch (error) {
+                status.textContent = 'Could not load settings. Reload this page before saving.';
+            } finally { Dashboard.hideLoadingMsg(); }
+        });
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            if (!loaded || !form.reportValidity()) return;
+            if (field('Width').valueAsNumber * field('Height').valueAsNumber > 8388608) {
+                status.textContent = 'Output must not exceed 8,388,608 pixels. Reduce width or height.';
+                return;
+            }
+            save.disabled = true;
+            Dashboard.showLoadingMsg();
+            try {
+                const config = await ApiClient.getPluginConfiguration(pluginId);
+                booleans.forEach(name => { config[name] = field(name).checked; });
+                numbers.forEach(name => { config[name] = field(name).valueAsNumber; });
+                strings.forEach(name => { config[name] = field(name).value; });
+                const result = await ApiClient.updatePluginConfiguration(pluginId, config);
+                Dashboard.processPluginConfigurationUpdateResult(result);
+                status.textContent = 'Settings saved.';
+            } catch (error) {
+                status.textContent = 'Settings could not be saved. Check your connection and server logs.';
+            } finally {
+                save.disabled = false;
+                Dashboard.hideLoadingMsg();
+            }
+        });
+    }());
+    </script>
+</div>
+</body>
+</html>

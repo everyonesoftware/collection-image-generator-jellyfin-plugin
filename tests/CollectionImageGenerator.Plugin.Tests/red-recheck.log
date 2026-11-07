@@ -1,0 +1,16 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Plugin -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Plugin\bin\Debug\net10.0\CollectionImageGenerator.Plugin.dll
+  CollectionImageGenerator.Plugin.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\bin\Debug\net10.0\CollectionImageGenerator.Plugin.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.99]     CollectionImageGenerator.Plugin.Tests.ProcessorTests.Requeries_current_collection_after_render_so_new_metadata_paths_are_preserved [FAIL]
+  Failed CollectionImageGenerator.Plugin.Tests.ProcessorTests.Requeries_current_collection_after_render_so_new_metadata_paths_are_preserved [12 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 0
+Actual:   1
+  Stack Trace:
+     at CollectionImageGenerator.Plugin.Tests.ProcessorTests.Requeries_current_collection_after_render_so_new_metadata_paths_are_preserved() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Plugin.Tests\ProcessorTests.cs:line 136
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:     1, Passed:    21, Skipped:     0, Total:    22, Duration: 806 ms - CollectionImageGenerator.Plugin.Tests.dll (net10.0)

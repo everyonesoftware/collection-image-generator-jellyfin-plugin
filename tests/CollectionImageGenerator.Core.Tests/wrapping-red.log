@@ -1,0 +1,73 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Release\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Core.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Release\net10.0\CollectionImageGenerator.Core.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Release\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.10]   Discovering: CollectionImageGenerator.Core.Tests
+[xUnit.net 00:00:00.17]   Discovered:  CollectionImageGenerator.Core.Tests
+[xUnit.net 00:00:00.20]   Starting:    CollectionImageGenerator.Core.Tests
+[xUnit.net 00:00:00.29]     CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\t") [FAIL]
+[xUnit.net 00:00:00.30]       Assert.Equal() Failure: Collections differ
+[xUnit.net 00:00:00.30]                               ↓ (pos 0)
+[xUnit.net 00:00:00.30]       Expected: string[]     ["WWW WWWW", "WWWWWWW"]
+[xUnit.net 00:00:00.30]       Actual:   List<string> ["WWW", "WWWW"]
+[xUnit.net 00:00:00.30]                               ↑ (pos 0)
+[xUnit.net 00:00:00.30]       Stack Trace:
+[xUnit.net 00:00:00.30]         C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\TextOverlayTests.cs(18,0): at CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(String separator)
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.30]     CollectionImageGenerator.Core.Tests.RendererTests.FittingTwoLineTitleRendersWithoutAvoidableEllipsis [FAIL]
+[xUnit.net 00:00:00.30]       Assert.NotEqual() Failure: Collections are equal
+[xUnit.net 00:00:00.30]       Expected: Not [137, 80, 78, 71, 13, ···]
+[xUnit.net 00:00:00.30]       Actual:       [137, 80, 78, 71, 13, ···]
+[xUnit.net 00:00:00.30]       Stack Trace:
+[xUnit.net 00:00:00.30]         C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs(114,0): at CollectionImageGenerator.Core.Tests.RendererTests.FittingTwoLineTitleRendersWithoutAvoidableEllipsis()
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.31]     CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: " ") [FAIL]
+[xUnit.net 00:00:00.31]       Assert.Equal() Failure: Collections differ
+[xUnit.net 00:00:00.31]                               ↓ (pos 0)
+[xUnit.net 00:00:00.31]       Expected: string[]     ["WWW WWWW", "WWWWWWW"]
+[xUnit.net 00:00:00.31]       Actual:   List<string> ["WWW", "WWWW"]
+[xUnit.net 00:00:00.31]                               ↑ (pos 0)
+[xUnit.net 00:00:00.31]       Stack Trace:
+[xUnit.net 00:00:00.31]         C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\TextOverlayTests.cs(18,0): at CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(String separator)
+[xUnit.net 00:00:00.31]            at InvokeStub_TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(Object, Span`1)
+[xUnit.net 00:00:00.31]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:00.31]   Finished:    CollectionImageGenerator.Core.Tests
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.FittingTwoLineTitleRendersWithoutAvoidableEllipsis [55 ms]
+  Error Message:
+   Assert.NotEqual() Failure: Collections are equal
+Expected: Not [137, 80, 78, 71, 13, ···]
+Actual:       [137, 80, 78, 71, 13, ···]
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.FittingTwoLineTitleRendersWithoutAvoidableEllipsis() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 114
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\t") [46 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                        ↓ (pos 0)
+Expected: string[]     ["WWW WWWW", "WWWWWWW"]
+Actual:   List<string> ["WWW", "WWWW"]
+                        ↑ (pos 0)
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(String separator) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\TextOverlayTests.cs:line 18
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: " ") [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                        ↓ (pos 0)
+Expected: string[]     ["WWW WWWW", "WWWWWWW"]
+Actual:   List<string> ["WWW", "WWWW"]
+                        ↑ (pos 0)
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(String separator) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\TextOverlayTests.cs:line 18
+   at InvokeStub_TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 3
+     Failed: 3
+ Total time: 0.8823 Seconds

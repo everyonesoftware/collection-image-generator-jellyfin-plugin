@@ -1,0 +1,28 @@
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Release\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Core.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Release\net10.0\CollectionImageGenerator.Core.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Release\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.11]   Discovering: CollectionImageGenerator.Core.Tests
+[xUnit.net 00:00:00.20]   Discovered:  CollectionImageGenerator.Core.Tests
+[xUnit.net 00:00:00.25]   Starting:    CollectionImageGenerator.Core.Tests
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\n") [49 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\r\n") [3 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\r") [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\t") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: " ") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.FittingTwoLineTitleRendersWithoutAvoidableEllipsis [63 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.UnicodeWrappingPreservesCombiningSequencesAndSurrogatePairs(element: "😀") [7 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.UnicodeWrappingPreservesCombiningSequencesAndSurrogatePairs(element: "é") [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.BreakingInsideAsciiWordUsesPreviousWhitespace(separator: "\t") [4 ms]
+[xUnit.net 00:00:00.41]   Finished:    CollectionImageGenerator.Core.Tests
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.BreakingInsideAsciiWordUsesPreviousWhitespace(separator: " ") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.ExplicitNewlineBreaksBeforeAvailableWidth(newline: "\r") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.ExplicitNewlineBreaksBeforeAvailableWidth(newline: "\n") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.ExplicitNewlineBreaksBeforeAvailableWidth(newline: "\r\n") [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.LongAsciiWordUsesFittingCharacterBoundary [1 ms]
+
+Test Run Successful.
+Total tests: 14
+     Passed: 14
+ Total time: 1.0471 Seconds

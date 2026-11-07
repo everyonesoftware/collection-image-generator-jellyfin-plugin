@@ -1,0 +1,32 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Core.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.28]     CollectionImageGenerator.Core.Tests.SelectionTests.AlphabeticalUsesOrdinalIgnoreCaseWithIdTieBreak [FAIL]
+[xUnit.net 00:00:00.30]     CollectionImageGenerator.Core.Tests.SelectionTests.RandomUsesSha256AndIsStableAcrossInputReorder [FAIL]
+  Failed CollectionImageGenerator.Core.Tests.SelectionTests.AlphabeticalUsesOrdinalIgnoreCaseWithIdTieBreak [27 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                                                        ↓ (pos 0)
+Expected: string[]                                     ["a", "z", "b"]
+Actual:   ArraySelectIterator<PosterCandidate, string> ["b", "z", "a"]
+                                                        ↑ (pos 0)
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.SelectionTests.AlphabeticalUsesOrdinalIgnoreCaseWithIdTieBreak() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\SelectionTests.cs:line 18
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.SelectionTests.RandomUsesSha256AndIsStableAcrossInputReorder [4 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+                                                        ↓ (pos 0)
+Expected: string[]                                     ["6", "14", "10", "19"]
+Actual:   ArraySelectIterator<PosterCandidate, string> ["0", "1", "10", "11"]
+                                                        ↑ (pos 0)
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.SelectionTests.RandomUsesSha256AndIsStableAcrossInputReorder() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\SelectionTests.cs:line 27
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     2, Passed:     0, Skipped:     0, Total:     2, Duration: 61 ms - CollectionImageGenerator.Core.Tests.dll (net10.0)

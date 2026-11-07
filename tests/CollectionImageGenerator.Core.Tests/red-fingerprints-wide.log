@@ -1,0 +1,36 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  CollectionImageGenerator.Core -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\bin\Debug\net10.0\CollectionImageGenerator.Core.dll
+  CollectionImageGenerator.Core.Tests -> C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Debug\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.19]     CollectionImageGenerator.Core.Tests.FingerprintTests.DeterministicOrderedHashIncludesSourceContentAndEveryOption [FAIL]
+[xUnit.net 00:00:00.21]     CollectionImageGenerator.Core.Tests.FingerprintTests.FramingPreventsAmbiguousConcatenationAndIsCultureIndependent [FAIL]
+[xUnit.net 00:00:00.24]     CollectionImageGenerator.Core.Tests.RendererTests.VeryWideSmallHeightStillContainsItsTextBand [FAIL]
+  Failed CollectionImageGenerator.Core.Tests.FingerprintTests.DeterministicOrderedHashIncludesSourceContentAndEveryOption [3 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.Fingerprints.Compute(IEnumerable`1 sources, SelectionMode mode, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\Fingerprints.cs:line 5
+   at CollectionImageGenerator.Core.Tests.FingerprintTests.DeterministicOrderedHashIncludesSourceContentAndEveryOption() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\FingerprintTests.cs:line 9
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.FingerprintTests.FramingPreventsAmbiguousConcatenationAndIsCultureIndependent [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at CollectionImageGenerator.Core.Fingerprints.Compute(IEnumerable`1 sources, SelectionMode mode, String collectionName, CollageOptions options) in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\src\CollectionImageGenerator.Core\Fingerprints.cs:line 5
+   at CollectionImageGenerator.Core.Tests.FingerprintTests.FramingPreventsAmbiguousConcatenationAndIsCultureIndependent() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\FingerprintTests.cs:line 23
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed CollectionImageGenerator.Core.Tests.RendererTests.VeryWideSmallHeightStillContainsItsTextBand [59 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (1 - 29)
+Actual: 64
+  Stack Trace:
+     at CollectionImageGenerator.Core.Tests.RendererTests.VeryWideSmallHeightStillContainsItsTextBand() in C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\RendererTests.cs:line 114
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     3, Passed:     0, Skipped:     0, Total:     3, Duration: 65 ms - CollectionImageGenerator.Core.Tests.dll (net10.0)

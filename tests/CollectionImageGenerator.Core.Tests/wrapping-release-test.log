@@ -1,0 +1,65 @@
+Test run for C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\bin\Release\net10.0\CollectionImageGenerator.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.10]   Discovering: CollectionImageGenerator.Core.Tests
+[xUnit.net 00:00:00.18]   Discovered:  CollectionImageGenerator.Core.Tests
+[xUnit.net 00:00:00.21]   Starting:    CollectionImageGenerator.Core.Tests
+  Passed CollectionImageGenerator.Core.Tests.FingerprintTests.DeterministicOrderedHashIncludesSourceContentAndEveryOption [20 ms]
+  Passed CollectionImageGenerator.Core.Tests.FingerprintTests.FramingPreventsAmbiguousConcatenationAndIsCultureIndependent [3 ms]
+  Passed CollectionImageGenerator.Core.Tests.SelectionTests.MaximumRealDateStillPrecedesMissingAndConflictingDuplicateIsCanonical [31 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.OutputAndFontAreBoundedBeforeAllocation(width: 100, height: 4097, font: 80) [34 ms]
+  Passed CollectionImageGenerator.Core.Tests.SelectionTests.AlphabeticalUsesOrdinalIgnoreCaseWithIdTieBreak [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.OutputAndFontAreBoundedBeforeAllocation(width: 100, height: 100, font: 513) [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\n") [34 ms]
+  Passed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "ABCD", owned: "abcd", overwrite: False, expected: True) [3 ms]
+  Passed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: null, overwrite: False, expected: False) [< 1 ms]
+  Passed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "", owned: null, overwrite: False, expected: True) [< 1 ms]
+  Passed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: "generated", overwrite: True, expected: True) [< 1 ms]
+  Passed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: "custom", owned: "generated", overwrite: False, expected: False) [< 1 ms]
+  Passed CollectionImageGenerator.Core.Tests.PolicyTests.PreserveUnknownUnlessMissingOwnedOrExplicit(current: null, owned: null, overwrite: False, expected: True) [< 1 ms]
+  Passed CollectionImageGenerator.Core.Tests.SelectionTests.RandomUsesSha256AndIsStableAcrossInputReorder [3 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.OutputAndFontAreBoundedBeforeAllocation(width: 100, height: 100, font: 7) [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\r\n") [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.SelectionTests.ReleaseOrderHasMissingLastStableTiesDistinctIdsAndLimit [< 1 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.OutputAndFontAreBoundedBeforeAllocation(width: 4096, height: 4096, font: 80) [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\r") [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.OutputAndFontAreBoundedBeforeAllocation(width: 4097, height: 100, font: 80) [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: "\t") [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.OutputAndFontAreBoundedBeforeAllocation(width: 100, height: 63, font: 80) [3 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.WrappingAtWhitespaceKeepsFittingFinalWord(separator: " ") [3 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.OutputAndFontAreBoundedBeforeAllocation(width: 63, height: 100, font: 80) [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.UnicodeWrappingPreservesCombiningSequencesAndSurrogatePairs(element: "😀") [7 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.UnicodeWrappingPreservesCombiningSequencesAndSurrogatePairs(element: "é") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.BreakingInsideAsciiWordUsesPreviousWhitespace(separator: "\t") [7 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.BreakingInsideAsciiWordUsesPreviousWhitespace(separator: " ") [2 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.HugeInputDimensionsAreRejectedBeforePixelAllocation [17 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.ExplicitNewlineBreaksBeforeAvailableWidth(newline: "\r") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.ExplicitNewlineBreaksBeforeAvailableWidth(newline: "\n") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.ExplicitNewlineBreaksBeforeAvailableWidth(newline: "\r\n") [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.TextOverlayTests.LongAsciiWordUsesFittingCharacterBoundary [1 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.VeryWideSmallHeightStillContainsItsTextBand [89 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.HugeCompressedFilesAreSkipped [31 ms]
+  Passed CollectionImageGenerator.Core.Tests.BoundsTests.TextAndInputCountsAreBounded [3 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.FittingTwoLineTitleRendersWithoutAvoidableEllipsis [11 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.EmptyAndAllBrokenAreExplicitErrors [5 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.CorruptAndMissingPostersAreSkipped [87 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(width: 300, height: 450, length: 1000) [23 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.UnbrokenWordsShrinkOrEllipsizeWithNoOverflow(width: 64, height: 64, length: 4096) [5 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Bottom) [51 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Middle) [35 ms]
+[xUnit.net 00:00:01.89]   Finished:    CollectionImageGenerator.Core.Tests
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.TextWrapsInsideVisiblePositionedBand(position: Top) [43 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 1) [90 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 2) [122 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.AvailablePostersRepeatToFour(count: 3) [115 ms]
+  Passed CollectionImageGenerator.Core.Tests.DemoSamplesTests.FictionalDemoPostersProduceReproducibleLabeledSamples [948 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.DefaultSizeHasExactFourQuadrantColors [524 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.CoverCropKeepsCenteredRegionWithoutStretchingOrOddSizeGaps [87 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.TemplateSubstitutesCollectionNameAndCanBeDisabled [271 ms]
+  Passed CollectionImageGenerator.Core.Tests.RendererTests.MalformedPathIsSkippedInFavorOfUsableImage [75 ms]
+
+Test Run Successful.
+Total tests: 52
+     Passed: 52
+ Total time: 2.4088 Seconds
+Results File: C:\Users\dansc\Code\collection-image-generator-jellyfin-plugin\tests\CollectionImageGenerator.Core.Tests\TestResults\wrapping-core-release.trx
