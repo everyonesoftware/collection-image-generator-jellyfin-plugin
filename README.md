@@ -19,12 +19,28 @@ Synthetic posters only; no real server or media-library data is shown. This exam
 
 <img src="docs/sample-collage-text-bottom.png" alt="Synthetic portrait collection cover with four posters and wrapped bottom title" width="350">
 
-## Installation: Docker Desktop on Windows
+## Installation: Jellyfin plugin repository (recommended)
 
-**Back up your Jellyfin `/config` volume first.** Start with a disposable collection that has no primary image. Installing a plugin requires a Jellyfin restart.
+**Back up your Jellyfin configuration first.** This plugin targets Jellyfin **12.4** and requires a restart after installation. The repository becomes available after the first tagged release has been published and its public downloads verified; a green CI build alone does not publish it.
 
-1. Build the package below (or download the ZIP from a successful GitHub Actions build).
-2. Extract `artifacts/collection-image-generator-0.1.0.zip` into a new directory named `CollectionImageGenerator_0.1.0.0`.
+1. Open **Dashboard → Plugins → Repositories** and add a repository named **Collection Image Generator** with this URL:
+
+   ```text
+   https://raw.githubusercontent.com/everyonesoftware/collection-image-generator-jellyfin-plugin/repository/manifest.json
+   ```
+
+2. Save, open the **Catalog** tab, select **Collection Image Generator**, and install the compatible stable version.
+3. Restart Jellyfin, then open **Dashboard → Plugins → Collection Image Generator**.
+4. Leave **Overwrite existing collection artwork** disabled. First test with a disposable Jellyfin instance/library containing a collection with no primary image, then inspect **Dashboard → Scheduled Tasks → Generate collection images** and the Jellyfin log before using it broadly. The task processes all eligible collections, not just the selected one. Automatic after-scan generation is enabled by default; avoid starting a library scan before this initial check.
+
+Releases include a versioned installation ZIP, a SHA-256 checksum, and a snapshot of the Jellyfin manifest. The stable repository retains older versions; its manifest uses Jellyfin's required MD5 archive checksum. Maintainer publication and recovery instructions are in [docs/releases.md](docs/releases.md).
+
+## Manual fallback: Docker Desktop on Windows
+
+**Back up your Jellyfin `/config` volume first.** Use a disposable Jellyfin instance/library for the initial test, with a collection that has no primary image. The task processes all eligible collections. Installing a plugin requires a Jellyfin restart.
+
+1. Download the ZIP and matching `.zip.sha256` from a published release, or build the package below. GitHub Actions artifacts are development packages, not a catalog installation.
+2. Verify the ZIP's SHA-256 against the checksum file (for example, `Get-FileHash .\collection-image-generator-<version>.zip -Algorithm SHA256` in PowerShell). Extract it into `CollectionImageGenerator_<assembly-version>`; replace the placeholders with the release values. For example, package version `0.1.0` uses directory `CollectionImageGenerator_0.1.0.0`.
 3. Copy that directory into Jellyfin's `/config/plugins/` directory. With a bind mount, use its Windows host directory. With a named volume, use `docker cp`:
 
    ```powershell
@@ -45,7 +61,7 @@ Synthetic posters only; no real server or media-library data is shown. This exam
    ```
 
 4. Open **Dashboard → Plugins → Collection Image Generator** and configure it.
-5. Leave **Overwrite existing collection artwork** disabled unless you explicitly want to replace existing collection posters.
+5. Leave **Overwrite existing collection artwork** disabled unless you explicitly want to replace existing collection posters. Automatic after-scan generation is enabled by default; avoid a scan before the disposable-collection check.
 6. Open **Dashboard → Scheduled Tasks → Generate collection images** and run it once. Check the Jellyfin log for generated-image messages and the total/failure summary.
 
 Jellyfin's container user needs read access to the source posters and write access to its configuration/metadata/plugin-data directories. The plugin uses paths inside the container, not Windows host paths. No additional media volume mount is required if Jellyfin can already read the posters.
@@ -88,10 +104,13 @@ dotnet test --configuration Release --no-build
 python -m unittest discover -s tools -p "test_*.py" -v
 node --test tools/settings.test.mjs
 python tools/package_plugin.py
-dotnet run --project tools/PluginLoadProbe --configuration Release --no-build -- artifacts/collection-image-generator-0.1.0.zip
+ARCHIVE_NAME=$(python tools/release_metadata.py --field archive_name)
+VERSION=$(python tools/release_metadata.py --field version)
+dotnet run --project tools/PluginLoadProbe --configuration Release --no-build -- "artifacts/$ARCHIVE_NAME"
+python tools/generate_manifest.py --archive "artifacts/$ARCHIVE_NAME" --tag "v$VERSION" --output artifacts/manifest.json
 ```
 
-The package and a SHA-256 checksum are written to `artifacts/`. Automated tests use deliberately synthetic images and temporary fixture collections; they do not access your real Jellyfin server or library. GitHub Actions builds/tests on both Linux and Windows, including the native renderer.
+These commands use Bash (Git Bash on Windows). The package and a SHA-256 checksum are written to `artifacts/`; `release_metadata.py` derives versions and filenames from the project metadata. Automated tests use deliberately synthetic images and temporary fixture collections; they do not access your real Jellyfin server or library. GitHub Actions builds/tests on both Linux and Windows, including the native renderer and standalone package loader. Tagged publication waits for both OS jobs and reuses the tested Linux ZIP without rebuilding it.
 
 ## Compatibility and limitations
 
@@ -99,7 +118,7 @@ The package and a SHA-256 checksum are written to `artifacts/`. Automated tests 
 - This is an initial plugin release. Successful compilation and automated tests are not a substitute for trying it on a disposable collection in your actual Jellyfin container.
 - Built-in daily generation does not mean immediate generation after an individual membership edit; run the scheduled task manually or wait for the next task/scan.
 - The bundled Latin font is not a promise of full CJK, emoji, or complex-script shaping support.
-- Manual installation only; a published Jellyfin plugin-catalog feed is not included in this initial release.
+- Catalog availability requires a successfully published tagged release and verified public repository feed. No live Jellyfin installation or library test is implied by CI or download verification.
 
 ## Development layout
 
@@ -107,6 +126,8 @@ The package and a SHA-256 checksum are written to `artifacts/`. Automated tests 
 - `src/CollectionImageGenerator.Plugin`: Jellyfin integration, settings, task hooks, and persistent ownership.
 - `tests/`: core and plugin lifecycle tests.
 - `tools/package_plugin.py`: minimal installation ZIP, dependency exclusion, font licensing, and checksum.
+- `tools/release_metadata.py`, `tools/generate_manifest.py`, `tools/verify_repository.py`: shared release metadata, history-preserving Jellyfin manifest generation, and anonymous download verification.
+- `.github/workflows/release.yml`, `docs/releases.md`: gated tagged publication and manual recovery.
 
 ## References
 

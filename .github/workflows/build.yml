@@ -5,9 +5,14 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
@@ -18,6 +23,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
@@ -33,11 +40,18 @@ jobs:
       - run: python -m unittest discover -s tools -p "test_*.py" -v
       - run: node --test tools/settings.test.mjs
       - run: python tools/package_plugin.py
-      - run: dotnet run --project tools/PluginLoadProbe --configuration Release --no-build -- artifacts/collection-image-generator-0.1.0.zip
+      - name: Probe the packaged plugin and smoke-test its manifest
+        run: |
+          ARCHIVE_NAME=$(python tools/release_metadata.py --field archive_name)
+          VERSION=$(python tools/release_metadata.py --field version)
+          dotnet run --project tools/PluginLoadProbe --configuration Release --no-build -- "artifacts/$ARCHIVE_NAME"
+          python tools/generate_manifest.py --archive "artifacts/$ARCHIVE_NAME" --tag "v$VERSION" --output artifacts/manifest.json
       - uses: actions/upload-artifact@v4
         with:
           name: collection-image-generator-${{ runner.os }}
-          path: artifacts/*
+          path: |
+            artifacts/*.zip
+            artifacts/*.zip.sha256
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: always()

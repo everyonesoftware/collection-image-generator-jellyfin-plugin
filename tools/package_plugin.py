@@ -1,10 +1,12 @@
-"""Build a minimal manual-install archive; Jellyfin supplies shared dependencies."""
+"""Build a minimal install archive; Jellyfin supplies shared dependencies."""
 import argparse
 import hashlib
 from pathlib import Path
 import zipfile
 
-VERSION = "0.1.0"
+from release_metadata import read_release_metadata
+
+VERSION = read_release_metadata()["version"]
 ASSEMBLIES = ("CollectionImageGenerator.Plugin.dll", "CollectionImageGenerator.Core.dll")
 
 

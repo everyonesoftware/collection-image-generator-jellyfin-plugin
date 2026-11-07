@@ -1,0 +1,149 @@
+name: Release plugin repository
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+# All tags share the same history; never cancel an active publication.
+concurrency:
+  group: plugin-repository-publication
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verify:
+    uses: ./.github/workflows/build.yml
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Validate the tag against project metadata
+        run: |
+          VERSION=$(python tools/release_metadata.py --field version)
+          ASSEMBLY_VERSION=$(python tools/release_metadata.py --field assembly_version)
+          ARCHIVE_NAME=$(python tools/release_metadata.py --field archive_name)
+          if [[ "$TAG" != "v$VERSION" ]]; then
+            echo "::error::Tag $TAG does not match project version v$VERSION. Do not move an existing release tag; bump the project versions and use a new tag."
+            exit 1
+          fi
+          printf 'VERSION=%s\nASSEMBLY_VERSION=%s\nARCHIVE_NAME=%s\n' "$VERSION" "$ASSEMBLY_VERSION" "$ARCHIVE_NAME" >> "$GITHUB_ENV"
+      - name: Download the verified Linux package (no rebuild)
+        uses: actions/download-artifact@v4
+        with:
+          name: collection-image-generator-Linux
+          path: artifacts
+      - name: Check package integrity and refuse an existing release
+        run: |
+          test -f "artifacts/$ARCHIVE_NAME"
+          test -f "artifacts/$ARCHIVE_NAME.sha256"
+          (cd artifacts && sha256sum --check "$ARCHIVE_NAME.sha256")
+          # A failed API call is an error, never evidence that a release is absent.
+          gh api --paginate "repos/$GH_REPO/releases?per_page=100" --jq '.[].tag_name' > artifacts/existing-release-tags.txt
+          if grep -Fxq -- "$TAG" artifacts/existing-release-tags.txt; then
+            echo "::error::Release $TAG already exists (possibly a draft). No assets will be overwritten. Inspect it and follow docs/releases.md manual recovery; do not rerun publication blindly."
+            exit 1
+          fi
+      - name: Read existing repository history without masking network errors
+        run: |
+          # ls-remote exits zero with empty output only when the branch is absent.
+          # With bash -e, authentication/network errors stop here, not in bootstrap.
+          REMOTE_REF=$(git ls-remote --heads origin refs/heads/repository)
+          if [[ -n "$REMOTE_REF" ]]; then
+            git fetch --no-tags --depth=1 origin refs/heads/repository:refs/remotes/origin/repository
+            REPOSITORY_BASE=$(git rev-parse refs/remotes/origin/repository)
+            git show "$REPOSITORY_BASE:manifest.json" > artifacts/previous-manifest.json
+            # Keep this branch metadata-only; unexpected files require human review.
+            git ls-tree -r --name-only "$REPOSITORY_BASE" > artifacts/repository-files.txt
+            if grep -Ev '^(manifest\.json|README\.md)$' artifacts/repository-files.txt; then
+              echo '::error::The repository branch contains unexpected files. It must contain manifest.json and optionally README.md only.'
+              exit 1
+            fi
+          else
+            REPOSITORY_BASE=
+            printf '[]\n' > artifacts/previous-manifest.json
+          fi
+          printf 'REPOSITORY_BASE=%s\n' "$REPOSITORY_BASE" >> "$GITHUB_ENV"
+      - name: Generate the candidate manifest with retained version history
+        run: |
+          python tools/generate_manifest.py --archive "artifacts/$ARCHIVE_NAME" --tag "$TAG" --previous artifacts/previous-manifest.json --output artifacts/manifest.json --changelog "Release $TAG"
+      - name: Create a draft release with immutable candidate assets
+        run: |
+          gh release create "$TAG" "artifacts/$ARCHIVE_NAME" "artifacts/$ARCHIVE_NAME.sha256" artifacts/manifest.json --verify-tag --draft --prerelease=false --latest=false --title "$TAG" --generate-notes
+          gh release view "$TAG" --json isDraft,assets > artifacts/draft-release.json
+          jq -e --arg archive "$ARCHIVE_NAME" '.isDraft == true and (([.assets[].name] | sort) == ([$archive, ($archive + ".sha256"), "manifest.json"] | sort))' artifacts/draft-release.json
+      - name: Publish the stable release and mark it latest
+        run: |
+          gh release edit "$TAG" --verify-tag --draft=false --prerelease=false --latest
+          test "$(gh release view "$TAG" --json isDraft,isPrerelease --jq '(.isDraft == false) and (.isPrerelease == false)')" = true
+          test "$(gh api "repos/$GH_REPO/releases/latest" --jq '.tag_name')" = "$TAG"
+      - name: Verify versioned manifest and ZIP anonymously before advertising them
+        env:
+          GH_TOKEN: ''
+          GITHUB_TOKEN: ''
+        run: |
+          MANIFEST_URL="https://github.com/$GH_REPO/releases/download/$TAG/manifest.json"
+          for attempt in 1 2 3 4 5; do
+            if python tools/verify_repository.py --manifest-url "$MANIFEST_URL" --version "$ASSEMBLY_VERSION"; then
+              exit 0
+            fi
+            if [[ "$attempt" -lt 5 ]]; then sleep 15; fi
+          done
+          echo '::error::Published assets failed anonymous verification. The repository branch was not changed. See docs/releases.md manual recovery.'
+          exit 1
+      - name: Publish only the manifest through a repository-branch worktree
+        run: |
+          REPOSITORY_WORKTREE="$RUNNER_TEMP/plugin-repository"
+          if [[ -n "$REPOSITORY_BASE" ]]; then
+            git worktree add --detach "$REPOSITORY_WORKTREE" "$REPOSITORY_BASE"
+          else
+            git worktree add --detach "$REPOSITORY_WORKTREE" HEAD
+            git -C "$REPOSITORY_WORKTREE" switch --orphan plugin-repository-bootstrap
+          fi
+          cp "$GITHUB_WORKSPACE/artifacts/manifest.json" "$REPOSITORY_WORKTREE/manifest.json"
+          git -C "$REPOSITORY_WORKTREE" config user.name 'github-actions[bot]'
+          git -C "$REPOSITORY_WORKTREE" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$REPOSITORY_WORKTREE" add -- manifest.json
+          git -C "$REPOSITORY_WORKTREE" commit -m "Publish plugin repository $TAG"
+          # Never force-push. A concurrent/manual branch change fails safely.
+          git -C "$REPOSITORY_WORKTREE" push origin HEAD:refs/heads/repository
+          PUBLISHED_COMMIT=$(git -C "$REPOSITORY_WORKTREE" rev-parse HEAD)
+          REMOTE_REF=$(git ls-remote --heads origin refs/heads/repository)
+          read -r REMOTE_COMMIT _ <<< "$REMOTE_REF"
+          test "$REMOTE_COMMIT" = "$PUBLISHED_COMMIT"
+      - name: Verify the stable repository URL anonymously (bounded cache retries)
+        env:
+          GH_TOKEN: ''
+          GITHUB_TOKEN: ''
+        run: |
+          MANIFEST_URL="https://raw.githubusercontent.com/$GH_REPO/repository/manifest.json"
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            if python tools/verify_repository.py --manifest-url "$MANIFEST_URL" --version "$ASSEMBLY_VERSION"; then
+              exit 0
+            fi
+            if [[ "$attempt" -lt 10 ]]; then sleep 30; fi
+          done
+          echo '::error::Stable repository verification failed after cache retries. Preserve the release and branch; inspect public downloads and follow docs/releases.md.'
+          exit 1
+      - name: Explain safe partial-publication recovery
+        if: failure()
+        run: |
+          echo '::error::Publication stopped. Any existing draft/published release and assets were left intact. Do not overwrite assets, move tags, force-push history, or bootstrap after an error. See docs/releases.md for recovery.'
