@@ -33,6 +33,10 @@ Verified:
 
 The core review found a reproducible word-boundary wrapping issue at minimum size. A separate fix agent added failing regression tests, applied the fix, and ran the full suite. A subsequent independent scoped review passed. Integration review found a TV-series exclusion bug; its fix and the additional corrupt-poster-before-selection regression passed independent re-review. Final scoped review reported no security or logic findings and reran both .NET suites successfully.
 
+## Cross-platform test isolation
+
+The test projects explicitly supply their own Windows and Linux SkiaSharp native assets; the distributable ZIP still relies on Jellyfin's host-provided native libraries. Word-wrap regression fixtures derive their widths from measured font advances rather than fixed pixel thresholds, while retaining exact expected lines and break-boundary assertions. This avoids platform-specific font metric assumptions without relaxing the regression coverage.
+
 ## Not yet established by these checks
 
 - Docker Desktop's Linux daemon was unreachable during initial discovery. No real Jellyfin container or user library has been accessed or modified.

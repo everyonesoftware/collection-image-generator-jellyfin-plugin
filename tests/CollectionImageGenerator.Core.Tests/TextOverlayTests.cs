@@ -16,9 +16,12 @@ public sealed class TextOverlayTests
     public void WrappingAtWhitespaceKeepsFittingFinalWord(string separator)
     {
         using var font = CreateFont();
-        var width = 64 - 2 * Math.Max(3f, 64 * .06f);
-        var text = "WWW WWWW" + separator + "WWWWWWW";
-        Assert.True(char.IsWhiteSpace(text[font.BreakText(text, width - 2)]));
+        const string firstLine = "WWW WWWW";
+        var text = firstLine + separator + "WWWWWWW";
+        var width = WidthEndingAfter(font, text, firstLine.Length);
+        var count = font.BreakText(text, width - 2);
+        Assert.Equal(firstLine.Length, count);
+        Assert.True(char.IsWhiteSpace(text[count]));
         var (lines, complete) = Wrap(text, font, width, 2);
 
         Assert.Equal(new[] { "WWW WWWW", "WWWWWWW" }, lines);
@@ -31,9 +34,12 @@ public sealed class TextOverlayTests
     public void BreakingInsideAsciiWordUsesPreviousWhitespace(string separator)
     {
         using var font = CreateFont();
-        var width = 64 - 2 * Math.Max(3f, 64 * .06f);
         var text = "WWW" + separator + "WWWWW WWWWWWW";
+        // Include four of the second word's five letters, forcing a word-boundary fallback.
+        var fittingCount = "WWW".Length + separator.Length + "WWWW".Length;
+        var width = WidthEndingAfter(font, text, fittingCount);
         var count = font.BreakText(text, width - 2);
+        Assert.Equal(fittingCount, count);
         Assert.Equal('W', text[count]);
         var (lines, complete) = Wrap(text, font, width, 3);
 
@@ -45,8 +51,10 @@ public sealed class TextOverlayTests
     public void LongAsciiWordUsesFittingCharacterBoundary()
     {
         using var font = CreateFont();
-        var width = 64 - 2 * Math.Max(3f, 64 * .06f);
-        var (lines, complete) = Wrap(new string('W', 14), font, width, 2);
+        var text = new string('W', 14);
+        var width = WidthEndingAfter(font, text, 7);
+        Assert.Equal(7, font.BreakText(text, width - 2));
+        var (lines, complete) = Wrap(text, font, width, 2);
 
         Assert.Equal(new[] { "WWWWWWW", "WWWWWWW" }, lines);
         Assert.True(complete);
@@ -92,6 +100,16 @@ public sealed class TextOverlayTests
                 Assert.Contains(offset, boundaries);
             }
         }
+    }
+
+    private static float WidthEndingAfter(SKFont font, string text, int count)
+    {
+        // Stay between adjacent measured advances, independent of platform font metrics.
+        var fittingWidth = font.MeasureText(text[..count]);
+        var overflowingWidth = font.MeasureText(text[..(count + 1)]);
+        Assert.True(overflowingWidth > fittingWidth);
+        // Wrap reserves two pixels before calling BreakText.
+        return fittingWidth + (overflowingWidth - fittingWidth) / 2 + 2;
     }
 
     private static SKFont CreateFont()
