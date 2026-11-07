@@ -1,0 +1,20 @@
+[
+  {
+    "guid": "f8a5df17-f0b4-4eab-9144-a46ea55c2b28",
+    "name": "Collection Image Generator",
+    "overview": "Portrait collection collages from member posters, with optional wrapped title text.",
+    "description": "Creates portrait 2x2 collection covers from local member posters. Choose release-date, alphabetical, or stable-random selection and optional top, middle, or bottom wrapped text. Existing custom artwork is preserved by default.",
+    "owner": "everyonesoftware",
+    "category": "General",
+    "versions": [
+      {
+        "version": "0.1.0.0",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://github.com/everyonesoftware/collection-image-generator-jellyfin-plugin/releases/download/v0.1.0/collection-image-generator-0.1.0.zip",
+        "checksum": "31bf1997ca646df9073434422db02204",
+        "timestamp": "2026-11-07T22:09:54.770879Z",
+        "changelog": "Release v0.1.0"
+      }
+    ]
+  }
+]
