@@ -21,7 +21,16 @@
                     <option value="Alphabetical">Alphabetical</option>
                     <option value="StableRandom">Stable random</option>
                 </select>
-                <div class="fieldDescription">The same collection and members produce the same random order. Collections with fewer than four usable posters repeat them.</div>
+                <div class="fieldDescription">The same collection and members produce the same stable-random order. Choose how to fill unused quadrants below.</div>
+            </div>
+            <div class="selectContainer">
+                <label class="selectLabel" for="RepeatMode">Fewer than four items</label>
+                <select is="emby-select" id="RepeatMode">
+                    <option value="SimpleRepeat">Simple repeat</option>
+                    <option value="RepeatCheckered">Repeat checkered</option>
+                    <option value="NoRepeat">Do not repeat</option>
+                </select>
+                <div class="fieldDescription">With two posters, simple repeat gives A B / A B; checkered gives A B / B A. With one or three, checkered matches simple repeat. Do not repeat fills quadrants in reading order and leaves unused space transparent. Applies to usable posters; text overlays still apply.</div>
             </div>
             <div class="checkboxContainer checkboxContainer-withDescription">
                 <label><input is="emby-checkbox" type="checkbox" id="EnableText" /><span>Overlay collection text</span></label>
@@ -79,9 +88,9 @@
         const runButton = page.querySelector('#GenerateNow');
         const booleans = ['Enabled', 'RunAfterScan', 'EnableText', 'OverwriteExisting'];
         const numbers = ['FontSize', 'Width', 'Height'];
-        const strings = ['SelectionMode', 'TextTemplate', 'TextPosition'];
-        const defaults = { Enabled: true, RunAfterScan: true, EnableText: false, OverwriteExisting: false, FontSize: 80, Width: 1000, Height: 1500, SelectionMode: 'ReleaseDate', TextTemplate: '{name}', TextPosition: 'Bottom' };
-        const enumNames = { SelectionMode: ['ReleaseDate', 'Alphabetical', 'StableRandom'], TextPosition: ['Top', 'Middle', 'Bottom'] };
+        const strings = ['SelectionMode', 'RepeatMode', 'TextTemplate', 'TextPosition'];
+        const defaults = { Enabled: true, RunAfterScan: true, EnableText: false, OverwriteExisting: false, FontSize: 80, Width: 1000, Height: 1500, SelectionMode: 'ReleaseDate', RepeatMode: 'SimpleRepeat', TextTemplate: '{name}', TextPosition: 'Bottom' };
+        const enumNames = { SelectionMode: ['ReleaseDate', 'Alphabetical', 'StableRandom'], RepeatMode: ['SimpleRepeat', 'RepeatCheckered', 'NoRepeat'], TextPosition: ['Top', 'Middle', 'Bottom'] };
         const field = name => page.querySelector('#' + name);
         let loaded = false;
         let saving = false;

@@ -4,10 +4,10 @@
 
 - .NET SDK 10.0.403; build targets .NET 10 and Jellyfin packages 12.4.0.
 - Full Release solution build completed with zero warnings/errors.
-- Core test suite: 52 passed, zero failures/skips.
-- Plugin lifecycle/configuration/ownership test suite: 51 passed, zero failures/skips.
+- Core test suite: 92 passed, zero failures/skips.
+- Plugin lifecycle/configuration/ownership test suite: 57 passed, zero failures/skips.
 - Python packaging/distribution suite: 13 passed.
-- Node settings-script suite: 12 passed, exercising the actual embedded JavaScript against mock API/DOM boundaries.
+- Node settings-script suite: 14 passed, exercising the actual embedded JavaScript against mock API/DOM boundaries.
 - Native SkiaSharp 3.119.4 renderer executed; synthetic sample PNGs inspected.
 - Packaged ZIP loaded through a standalone host using Jellyfin 12.4's exact `AssemblyDependencyResolver`/`AssemblyLoadContext` algorithm. Verified discoverable scheduled/post-scan exports and isolated resolution of the packaged core assembly, with no plugin-project reference in the probe host.
 - NuGet vulnerability audit reported no vulnerable dependencies for core, plugin, and loader-probe projects using the configured NuGet source.
@@ -34,6 +34,12 @@ Verified:
 Chromium exercised the actual embedded HTML with the official API client's task-list/start method bodies and deliberately fake server boundaries. The real client methods produced `GET ScheduledTasks` and `POST ScheduledTasks/Running/collection-images` for the fixture task ID. This was not a live-server execution.
 
 Verified successful request feedback without a configuration save, an already-running task without a second start, start-request error recovery, blocked duplicate clicks and Save during an in-flight request, and balanced loading indicators with no captured script errors. Desktop and 390-pixel-wide fixture views were inspected; neither had horizontal overflow. Jellyfin host styling was not included in this fixture. Node tests additionally cover saved-disabled configuration, discovery/state failures, numeric enum values, and concurrency in both directions. The compiled embedded page and actual assembly version are checked by the .NET lifecycle suite.
+
+## Repeat layouts (0.1.2)
+
+The native renderer's pixel/alpha tests cover all three modes with one through four usable posters, including odd output dimensions and invalid/missing sources. Two-source checkerboard is explicitly checked as A B / B A. Do-not-repeat leaves unpainted quadrants transparent; text remains an independent overlay. Fingerprint tests establish setting-driven invalidation.
+
+Plugin tests verify legacy XML defaults, XML persistence and conversion to render options, mode changes updating plugin-owned images once, unchanged runs skipping work, and custom artwork remaining protected. Chromium exercised all three dropdown choices through Save and reload, numeric enum loading, and the legacy default without an implicit save. Desktop and 390-pixel fixture views were inspected without horizontal overflow; these use fake API boundaries and do not establish live Jellyfin execution. `docs/sample-repeat-modes.png` is actual rendered output from labeled synthetic poster fixtures and was visually inspected.
 
 ## Independent review
 

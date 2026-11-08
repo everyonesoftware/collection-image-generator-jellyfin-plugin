@@ -6,7 +6,7 @@ A server-side Jellyfin **12.4** plugin that builds portrait collection covers fr
 
 - 1000×1500 portrait PNG covers, proportional cover-cropping, no stretching.
 - Select four distinct items by **release date**, **alphabetical title**, or **stable random** order. Stable random doesn't shuffle on every run.
-- Repeat available posters for collections with fewer than four usable images. Empty collections are skipped.
+- Choose how to fill collections with fewer than four usable posters: **Simple repeat** (default), **Repeat checkered**, or **Do not repeat** with transparent unused quadrants. Empty collections are skipped.
 - Optional centered text with **top**, **middle**, or **bottom** placement, word wrapping, and a dark readability band. `{name}` inserts the collection title; a custom template is supported.
 - Bundled font, so text doesn't depend on fonts installed in the Docker image.
 - Automatic scheduled generation, a **Generate now** button on the plugin settings page, and configurable after-library-scan generation.
@@ -75,6 +75,7 @@ The archive deliberately **does not** ship Jellyfin, .NET, or SkiaSharp assembli
 | Enabled | On | Allow generation |
 | Run after library scan | On | Generate after a completed scan |
 | Poster selection | Release date | Earliest release first, alphabetical, or stable random |
+| Fewer than four items | Simple repeat | Repeat sequentially, use a two-poster checkerboard, or leave unused quadrants transparent |
 | Add text | Off | Draw the configured title text |
 | Text template | `{name}` | Collection title, custom text, or both |
 | Text placement | Bottom | Top, middle, or bottom |
@@ -82,6 +83,22 @@ The archive deliberately **does not** ship Jellyfin, .NET, or SkiaSharp assembli
 | Replace existing artwork | Off | Explicitly permit overwriting artwork not owned by this plugin |
 
 The scheduler's recurrence is managed in Jellyfin's Scheduled Tasks screen. Saving settings does not immediately rewrite your entire collection library. To request one run, save any edits and click **Generate now** in the **Run once** section. It uses saved settings, respects artwork protection, and processes all eligible collections without changing scheduled triggers. The plugin must be enabled in saved settings. The page reports an already-running/cancelling task or a request failure; **Generation requested** is not a completion result. Monitor progress and results in Scheduled Tasks.
+
+### Layouts with fewer than four posters
+
+Quadrants are filled in reading order: top left, top right, bottom left, bottom right. Letters identify distinct usable posters; `—` is transparent space.
+
+| Mode | One poster | Two posters | Three posters |
+|---|---|---|---|
+| Simple repeat (default) | `A A / A A` | `A B / A B` | `A B / C A` |
+| Repeat checkered | `A A / A A` | `A B / B A` | `A B / C A` |
+| Do not repeat | `A — / — —` | `A B / — —` | `A B / C —` |
+
+Synthetic comparison (checkerboard indicates transparent pixels, not a painted background):
+
+<img src="docs/sample-repeat-modes.png" alt="Synthetic repeat-mode layouts with two and three posters" width="720">
+
+With four posters, all modes produce `A B / C D`. This setting applies to usable local posters, after missing/corrupt images are filtered. It does not enlarge the remaining posters or move them out of their quadrants. Optional title text and its readability band still overlay the collage, including otherwise transparent areas. Saving a different mode invalidates the generated-image cache; use **Generate now** or wait for the next automatic run to update eligible plugin-owned artwork. Custom-artwork protection is unchanged.
 
 ## Artwork protection and state
 

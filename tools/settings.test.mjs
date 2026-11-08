@@ -57,6 +57,27 @@ test('loads numeric enums and safe defaults, saves typed fields, preserves unkno
   assert.equal(f.state.loading,0);
 });
 
+test('older configurations default to simple repeat without an implicit settings save',async()=>{
+  const f=fixture();await f.load();
+  assert.ok(f.field('RepeatMode'),'Repeat mode dropdown is missing');
+  assert.equal(f.field('RepeatMode').value,'SimpleRepeat');
+  assert.equal(f.state.writes,0);
+});
+
+test('repeat mode handles numeric and named enums and survives save and reload',async()=>{
+  const modes=['SimpleRepeat','RepeatCheckered','NoRepeat'];
+  for(const [index,mode] of modes.entries()){
+    for(const response of [index,mode]){
+      const f=fixture({...defaults,RepeatMode:response});await f.load();
+      assert.equal(f.field('RepeatMode').value,mode);
+      const next=modes[(index+1)%modes.length];f.field('RepeatMode').value=next;
+      await f.save();assert.equal(f.stored.RepeatMode,next);assert.equal(f.stored.FutureField,'preserve-me');
+      f.field('RepeatMode').value='unsaved';await f.load();assert.equal(f.field('RepeatMode').value,next);
+      assert.equal(f.state.loading,0);
+    }
+  }
+});
+
 test('oversized dimensions never reach update API',async()=>{
   const f=fixture();await f.load();f.field('Width').value='4096';f.field('Height').value='4096';await f.save();
   assert.equal(f.state.writes,0);assert.match(f.field('CollectionImageGeneratorStatus').textContent,/8,388,608/);

@@ -8,6 +8,7 @@ public sealed class PluginConfiguration : BasePluginConfiguration
     public bool Enabled { get; set; } = true;
     public bool RunAfterScan { get; set; } = true;
     public SelectionMode SelectionMode { get; set; } = SelectionMode.ReleaseDate;
+    public RepeatMode RepeatMode { get; set; } = RepeatMode.SimpleRepeat;
     public bool EnableText { get; set; }
     public string TextTemplate { get; set; } = "{name}";
     public TextPosition TextPosition { get; set; } = TextPosition.Bottom;
@@ -18,6 +19,7 @@ public sealed class PluginConfiguration : BasePluginConfiguration
 
     public CollageOptions ToCollageOptions() => new()
     {
+        RepeatMode = RepeatMode,
         EnableText = EnableText,
         TextTemplate = TextTemplate,
         TextPosition = TextPosition,

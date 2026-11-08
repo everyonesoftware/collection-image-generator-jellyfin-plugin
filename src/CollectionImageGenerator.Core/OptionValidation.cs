@@ -11,6 +11,7 @@ internal static class OptionValidation
         if (options.Height is < 64 or > 4096) throw new ArgumentOutOfRangeException(nameof(options.Height), "Height must be 64..4096.");
         if ((long)options.Width * options.Height > 8_388_608) throw new ArgumentOutOfRangeException(nameof(options), "Output must not exceed 8,388,608 pixels.");
         if (options.FontSize is < 8 or > 512) throw new ArgumentOutOfRangeException(nameof(options.FontSize), "Font size must be 8..512.");
+        if (!Enum.IsDefined(options.RepeatMode)) throw new ArgumentOutOfRangeException(nameof(options.RepeatMode));
         if (!Enum.IsDefined(options.TextPosition)) throw new ArgumentOutOfRangeException(nameof(options.TextPosition));
         if (collectionName.Length > 4096) throw new ArgumentOutOfRangeException(nameof(collectionName), "Name must not exceed 4096 characters.");
         if (options.TextTemplate.Length > 4096) throw new ArgumentOutOfRangeException(nameof(options.TextTemplate), "Template must not exceed 4096 characters.");

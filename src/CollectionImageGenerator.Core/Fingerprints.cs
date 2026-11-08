@@ -18,7 +18,8 @@ public static class Fingerprints
         }
         void Number(int value) => Add(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
         // Bump this version whenever renderer/font behavior changes to invalidate prior generated artwork.
-        Add("CollectionImageGenerator.Core/v1/NotoSans-Regular");
+        Add("CollectionImageGenerator.Core/v2/NotoSans-Regular");
+        Number((int)options.RepeatMode);
         Number((int)mode);
         Add(collectionName);
         Add(options.EnableText ? "1" : "0");

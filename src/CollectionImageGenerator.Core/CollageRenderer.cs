@@ -18,9 +18,14 @@ public static class CollageRenderer
             if (images.Count == 0) throw new InvalidOperationException("No usable poster images were found.");
             using var result = new SkiaSharp.SKBitmap(options.Width, options.Height);
             using var canvas = new SkiaSharp.SKCanvas(result);
-            for (var i = 0; i < 4; i++)
+            canvas.Clear(SkiaSharp.SKColors.Transparent);
+            var quadrantCount = options.RepeatMode == RepeatMode.NoRepeat ? images.Count : 4;
+            for (var i = 0; i < quadrantCount; i++)
             {
-                var image = images[i % images.Count];
+                var sourceIndex = options.RepeatMode == RepeatMode.RepeatCheckered && images.Count == 2
+                    ? (i == 0 || i == 3 ? 0 : 1)
+                    : i % images.Count;
+                var image = images[sourceIndex];
                 var left = i % 2 == 0 ? 0 : options.Width / 2;
                 var top = i / 2 == 0 ? 0 : options.Height / 2;
                 var right = i % 2 == 0 ? options.Width / 2 : options.Width;

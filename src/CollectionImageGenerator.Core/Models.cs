@@ -2,10 +2,12 @@ namespace CollectionImageGenerator.Core;
 
 public enum SelectionMode { ReleaseDate, Alphabetical, StableRandom }
 public enum TextPosition { Top, Middle, Bottom }
+public enum RepeatMode { SimpleRepeat = 0, RepeatCheckered = 1, NoRepeat = 2 }
 public record PosterCandidate(string Id, string Name, DateTime? PremiereDate, string Path);
 
 public class CollageOptions
 {
+    public RepeatMode RepeatMode { get; set; } = RepeatMode.SimpleRepeat;
     public bool EnableText { get; set; }
     public string TextTemplate { get; set; } = "{name}";
     public TextPosition TextPosition { get; set; } = TextPosition.Bottom;
