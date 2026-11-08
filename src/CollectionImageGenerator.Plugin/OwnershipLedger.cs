@@ -34,12 +34,25 @@ public sealed class OwnershipLedger(string dataFolder)
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException) { }
     }
 
-    public async Task RecordAsync(string id, OwnershipEntry entry, CancellationToken cancellationToken)
+    public Task RecordAsync(string id, OwnershipEntry entry, CancellationToken cancellationToken)
     {
         if (!IsTrusted) throw new InvalidOperationException("Ownership ledger is untrusted; refusing to record ownership.");
         if (string.IsNullOrWhiteSpace(id) || !ValidHash(entry.ImageHash) || !ValidHash(entry.Fingerprint))
             throw new ArgumentException("Ownership evidence requires an ID and SHA-256 hashes.", nameof(entry));
         var updated = new Dictionary<string, OwnershipEntry>(entries, StringComparer.Ordinal) { [id] = entry };
+        return PersistAsync(updated, cancellationToken);
+    }
+
+    public Task RemoveAsync(string id, CancellationToken cancellationToken)
+    {
+        if (!IsTrusted) throw new InvalidOperationException("Ownership ledger is untrusted; refusing to remove ownership evidence.");
+        var updated = new Dictionary<string, OwnershipEntry>(entries, StringComparer.Ordinal);
+        if (!updated.Remove(id)) return Task.CompletedTask;
+        return PersistAsync(updated, cancellationToken);
+    }
+
+    private async Task PersistAsync(Dictionary<string, OwnershipEntry> updated, CancellationToken cancellationToken)
+    {
         Directory.CreateDirectory(dataFolder);
         var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
         try

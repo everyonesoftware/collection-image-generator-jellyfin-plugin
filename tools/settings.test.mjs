@@ -78,6 +78,18 @@ test('repeat mode handles numeric and named enums and survives save and reload',
   }
 });
 
+test('collection-change generation defaults on for older configs and persists an explicit opt-out',async()=>{
+  const f=fixture();await f.load();
+  assert.ok(f.field('RunOnCollectionChanges'),'Automatic collection-change checkbox is missing');
+  assert.equal(f.field('RunOnCollectionChanges').checked,true);assert.equal(f.state.writes,0);
+  f.field('RunOnCollectionChanges').checked=false;await f.save();
+  assert.equal(f.stored.RunOnCollectionChanges,false);assert.equal(f.stored.FutureField,'preserve-me');
+  f.field('RunOnCollectionChanges').checked=true;await f.load();assert.equal(f.field('RunOnCollectionChanges').checked,false);
+  f.field('RunOnCollectionChanges').checked=true;await f.save();await f.load();
+  assert.equal(f.stored.RunOnCollectionChanges,true);assert.equal(f.field('RunOnCollectionChanges').checked,true);
+  assert.deepEqual(f.state.started,[]);assert.equal(f.state.loading,0);
+});
+
 test('oversized dimensions never reach update API',async()=>{
   const f=fixture();await f.load();f.field('Width').value='4096';f.field('Height').value='4096';await f.save();
   assert.equal(f.state.writes,0);assert.match(f.field('CollectionImageGeneratorStatus').textContent,/8,388,608/);

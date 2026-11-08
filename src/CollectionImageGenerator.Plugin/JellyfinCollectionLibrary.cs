@@ -24,9 +24,9 @@ public sealed class JellyfinCollectionLibrary(ILibraryManager library, IProvider
     public IEnumerable<BaseItem> GetMembers(BaseItem collection)
     {
         if (collection is not BoxSet box) return [];
-        // Modern linked membership and legacy physical children, direct only. Never walk nested collections/cycles.
+        // Return all direct members, including nested boxsets, to distinguish empty from unusable.
+        // The processor excludes nested boxsets from poster selection; never recurse.
         return box.GetLinkedChildren().Concat(box.Children)
-            .Where(item => item is not BoxSet && item.Id != box.Id)
             .DistinctBy(item => item.Id).ToArray();
     }
 
@@ -34,6 +34,13 @@ public sealed class JellyfinCollectionLibrary(ILibraryManager library, IProvider
     {
         var image = item.GetImageInfo(ImageType.Primary, 0);
         return image is null ? null : image.Path ?? string.Empty;
+    }
+
+    public Task ClearPrimaryAsync(BaseItem item, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        // Jellyfin removes the file/image metadata and persists ImageUpdate itself.
+        return item.DeleteImageAsync(ImageType.Primary, 0);
     }
 
     public async Task SavePrimaryAsync(BaseItem item, byte[] png, CancellationToken cancellationToken)

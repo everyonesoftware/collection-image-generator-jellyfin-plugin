@@ -159,11 +159,23 @@ public sealed partial class ProcessorTests : IDisposable
         public List<BaseItem> Members { get; } = [];
         public Dictionary<Guid, string?> Paths { get; } = [];
         public int Saves { get; private set; }
+        public int Clears { get; private set; }
+        public Func<BaseItem, CancellationToken, Task>? ClearOverride { get; set; }
+        public Task ClearPrimaryAsync(BaseItem item, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (ClearOverride is not null) return ClearOverride(item, cancellationToken);
+            Paths.Remove(item.Id);
+            Clears++;
+            return Task.CompletedTask;
+        }
         public Guid? FailSaveFor { get; set; }
         public Func<BaseItem, CancellationToken, Task>? BeforeSave { get; set; }
         public Action<BaseItem>? OnReload { get; set; }
+        public Func<Guid, BaseItem?>? ReloadOverride { get; set; }
         public BaseItem? ReloadCollection(Guid id)
         {
+            if (ReloadOverride is not null) return ReloadOverride(id);
             var item = Collections.SingleOrDefault(item => item.Id == id);
             if (item is not null) OnReload?.Invoke(item);
             return item;

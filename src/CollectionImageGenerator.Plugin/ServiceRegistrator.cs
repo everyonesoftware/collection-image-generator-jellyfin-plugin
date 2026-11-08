@@ -13,6 +13,7 @@ public sealed class ServiceRegistrator : IPluginServiceRegistrator
         serviceCollection.AddSingleton(_ => new OwnershipLedger(CurrentPlugin().DataFolderPath));
         serviceCollection.AddSingleton<ICollectionLibrary, JellyfinCollectionLibrary>();
         serviceCollection.AddSingleton<CollectionProcessor>();
+        serviceCollection.AddHostedService<CollectionChangeListener>();
         // Jellyfin discovers the public IScheduledTask / ILibraryPostScanTask implementations itself.
         // Both are constructed with the SAME registered processor, and therefore the same semaphore.
     }

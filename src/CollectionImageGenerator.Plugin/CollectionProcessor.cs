@@ -13,7 +13,13 @@ public sealed class CollectionProcessor(
 {
     private readonly SemaphoreSlim gate = new(1, 1);
 
-    public async Task RunAsync(IProgress<double> progress, CancellationToken cancellationToken)
+    public Task RunAsync(IProgress<double> progress, CancellationToken cancellationToken)
+        => RunInternalAsync(progress, null, cancellationToken);
+
+    public Task RunChangedCollectionsAsync(IEnumerable<Guid> collectionIds, CancellationToken cancellationToken)
+        => RunInternalAsync(null, collectionIds.Where(id => id != Guid.Empty).Distinct().ToArray(), cancellationToken);
+
+    private async Task RunInternalAsync(IProgress<double>? progress, IReadOnlyList<Guid>? changedIds, CancellationToken cancellationToken)
     {
         var acquired = false;
         try
@@ -22,30 +28,35 @@ public sealed class CollectionProcessor(
             acquired = true;
             cancellationToken.ThrowIfCancellationRequested();
             var config = configuration();
-            if (!config.Enabled) return;
+            if (!config.Enabled || (changedIds is not null && !config.RunOnCollectionChanges)) return;
             await ledger.LoadAsync(cancellationToken).ConfigureAwait(false);
             if (!ledger.IsTrusted) throw new IOException("Ownership ledger is corrupt or unreadable. No artwork was changed. Restore or remove the ledger to resume; existing images then remain unowned.");
-            var collections = library.GetCollections();
+            var collections = changedIds is null ? library.GetCollections() : null;
+            var ids = changedIds ?? collections!.Select(item => item.Id).ToArray();
             var failures = new List<Exception>();
-            for (var index = 0; index < collections.Count; index++)
+            for (var index = 0; index < ids.Count; index++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                try { await ProcessAsync(collections[index], config, cancellationToken).ConfigureAwait(false); }
+                try
+                {
+                    var collection = collections is null ? library.ReloadCollection(ids[index]) : collections[index];
+                    if (collection is not null) await ProcessAsync(collection, config, cancellationToken).ConfigureAwait(false);
+                }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
                 catch (Exception exception)
                 {
-                    logger.LogError(exception, "Collection artwork failed for {CollectionId}", collections[index].Id);
+                    logger.LogError(exception, "Collection artwork failed for {CollectionId}", ids[index]);
                     failures.Add(exception);
                 }
-                progress.Report((index + 1) * 100d / collections.Count);
+                progress?.Report((index + 1) * 100d / ids.Count);
             }
-            logger.LogInformation("Collection artwork run completed: {Total} collections, {Failed} failures", collections.Count, failures.Count);
+            logger.LogInformation("Collection artwork run completed: {Total} collections, {Failed} failures", ids.Count, failures.Count);
             if (failures.Count != 0) throw new AggregateException("Some collection artwork updates failed; see server log for collection IDs.", failures);
         }
         finally
         {
             if (acquired) gate.Release();
-            progress.Report(100);
+            progress?.Report(100);
         }
     }
 
@@ -58,9 +69,29 @@ public sealed class CollectionProcessor(
         var isOwned = before.Path is not null && owned?.ImagePath == before.Path && owned.ImageHash == before.Hash;
         if (!before.Readable || (before.Path is not null && !isOwned && !config.OverwriteExisting)) return;
 
+        var members = library.GetMembers(collection).ToArray();
+        if (members.Length == 0)
+        {
+            if (isOwned)
+            {
+                var currentEmpty = library.ReloadCollection(collection.Id);
+                if (currentEmpty is null || library.GetMembers(currentEmpty).Any()) return;
+                var recheckedEmpty = await ReadPrimaryAsync(currentEmpty, cancellationToken).ConfigureAwait(false);
+                if (!recheckedEmpty.Readable || recheckedEmpty != before) return;
+                cancellationToken.ThrowIfCancellationRequested();
+                await library.ClearPrimaryAsync(currentEmpty, cancellationToken).ConfigureAwait(false);
+                var cleared = library.ReloadCollection(collection.Id);
+                if (cleared is null || library.GetPrimaryPath(cleared) is not null)
+                    throw new IOException("Primary image removal could not be verified; ownership evidence was retained.");
+                await ledger.RemoveAsync(id, cancellationToken).ConfigureAwait(false);
+                logger.LogInformation("Cleared generated artwork for empty collection {CollectionId}", collection.Id);
+            }
+            return;
+        }
+
         var candidates = new List<PosterCandidate>();
         var sourceHashes = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var item in library.GetMembers(collection).Where(item => item is not MediaBrowser.Controller.Entities.Movies.BoxSet).DistinctBy(item => item.Id))
+        foreach (var item in members.Where(item => item is not MediaBrowser.Controller.Entities.Movies.BoxSet).DistinctBy(item => item.Id))
         {
             cancellationToken.ThrowIfCancellationRequested();
             var source = await ReadPrimaryAsync(item, cancellationToken).ConfigureAwait(false);

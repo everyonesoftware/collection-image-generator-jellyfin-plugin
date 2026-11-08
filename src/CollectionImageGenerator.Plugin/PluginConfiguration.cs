@@ -7,6 +7,7 @@ public sealed class PluginConfiguration : BasePluginConfiguration
 {
     public bool Enabled { get; set; } = true;
     public bool RunAfterScan { get; set; } = true;
+    public bool RunOnCollectionChanges { get; set; } = true;
     public SelectionMode SelectionMode { get; set; } = SelectionMode.ReleaseDate;
     public RepeatMode RepeatMode { get; set; } = RepeatMode.SimpleRepeat;
     public bool EnableText { get; set; }

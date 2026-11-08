@@ -42,7 +42,7 @@ public sealed class JellyfinLibraryTests
     }
 
     [Fact]
-    public void Direct_modern_links_and_legacy_children_are_deduplicated_without_nested_recursion()
+    public void Direct_modern_links_and_legacy_children_are_deduplicated_and_nested_members_not_recursed()
     {
         var manager = new Mock<ILibraryManager>();
         var movie = new Movie { Id = Guid.NewGuid() };
@@ -56,13 +56,13 @@ public sealed class JellyfinLibraryTests
             BaseItem.LibraryManager = manager.Object;
             var adapter = new JellyfinCollectionLibrary(manager.Object, Mock.Of<IProviderManager>());
             var members = adapter.GetMembers(box).ToList();
-            Assert.Equal(new[] { movie.Id, legacyMovie.Id }, members.Select(m => m.Id));
+            Assert.Equal(new[] { movie.Id, legacyMovie.Id, nested.Id }, members.Select(m => m.Id));
         }
         finally { BaseItem.LibraryManager = previous; }
     }
 
     [Fact]
-    public void Direct_series_links_and_legacy_series_are_kept_without_nested_boxsets_or_duplicates()
+    public void Direct_series_links_and_legacy_series_and_nested_members_are_kept_without_duplicates_or_recursion()
     {
         var manager = new Mock<ILibraryManager>();
         var linkedSeries = new MediaBrowser.Controller.Entities.TV.Series { Id = Guid.NewGuid() };
@@ -87,7 +87,7 @@ public sealed class JellyfinLibraryTests
             BaseItem.LibraryManager = manager.Object;
             var adapter = new JellyfinCollectionLibrary(manager.Object, Mock.Of<IProviderManager>());
             Assert.IsAssignableFrom<Folder>(linkedSeries);
-            Assert.Equal(new[] { linkedSeries.Id, legacySeries.Id, directPosterItem.Id },
+            Assert.Equal(new[] { linkedSeries.Id, legacySeries.Id, directPosterItem.Id, nested.Id, box.Id },
                 adapter.GetMembers(box).Select(member => member.Id));
             manager.Verify(m => m.GetItemList(It.IsAny<InternalItemsQuery>()), Times.Once);
         }

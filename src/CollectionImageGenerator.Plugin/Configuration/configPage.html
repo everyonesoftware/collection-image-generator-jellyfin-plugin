@@ -9,10 +9,14 @@
         <form id="CollectionImageGeneratorConfigForm">
             <div class="checkboxContainer checkboxContainer-withDescription">
                 <label><input is="emby-checkbox" type="checkbox" id="Enabled" checked /><span>Enabled</span></label>
-                <div class="fieldDescription checkboxFieldDescription">Allow daily, manual and post-scan generation.</div>
+                <div class="fieldDescription checkboxFieldDescription">Allow scheduled, manual, post-scan, and collection-change generation.</div>
             </div>
             <div class="checkboxContainer checkboxContainer-withDescription">
                 <label><input is="emby-checkbox" type="checkbox" id="RunAfterScan" checked /><span>Run after library scans</span></label>
+            </div>
+            <div class="checkboxContainer checkboxContainer-withDescription">
+                <label><input is="emby-checkbox" type="checkbox" id="RunOnCollectionChanges" checked /><span>Regenerate when collection contents change</span></label>
+                <div class="fieldDescription checkboxFieldDescription">Recheck new or edited collections after about five quiet seconds. Only affected collections are processed. Unchanged posters are skipped and custom artwork stays protected. Empty collections lose only verified plugin-generated artwork; unavailable posters in nonempty collections do not clear the image.</div>
             </div>
             <div class="selectContainer">
                 <label class="selectLabel" for="SelectionMode">Member poster order</label>
@@ -86,10 +90,10 @@
         const status = page.querySelector('#CollectionImageGeneratorStatus');
         const runStatus = page.querySelector('#CollectionImageGeneratorRunStatus');
         const runButton = page.querySelector('#GenerateNow');
-        const booleans = ['Enabled', 'RunAfterScan', 'EnableText', 'OverwriteExisting'];
+        const booleans = ['Enabled', 'RunAfterScan', 'RunOnCollectionChanges', 'EnableText', 'OverwriteExisting'];
         const numbers = ['FontSize', 'Width', 'Height'];
         const strings = ['SelectionMode', 'RepeatMode', 'TextTemplate', 'TextPosition'];
-        const defaults = { Enabled: true, RunAfterScan: true, EnableText: false, OverwriteExisting: false, FontSize: 80, Width: 1000, Height: 1500, SelectionMode: 'ReleaseDate', RepeatMode: 'SimpleRepeat', TextTemplate: '{name}', TextPosition: 'Bottom' };
+        const defaults = { Enabled: true, RunAfterScan: true, RunOnCollectionChanges: true, EnableText: false, OverwriteExisting: false, FontSize: 80, Width: 1000, Height: 1500, SelectionMode: 'ReleaseDate', RepeatMode: 'SimpleRepeat', TextTemplate: '{name}', TextPosition: 'Bottom' };
         const enumNames = { SelectionMode: ['ReleaseDate', 'Alphabetical', 'StableRandom'], RepeatMode: ['SimpleRepeat', 'RepeatCheckered', 'NoRepeat'], TextPosition: ['Top', 'Middle', 'Bottom'] };
         const field = name => page.querySelector('#' + name);
         let loaded = false;

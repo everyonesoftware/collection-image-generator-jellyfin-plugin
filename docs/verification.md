@@ -5,11 +5,11 @@
 - .NET SDK 10.0.403; build targets .NET 10 and Jellyfin packages 12.4.0.
 - Full Release solution build completed with zero warnings/errors.
 - Core test suite: 92 passed, zero failures/skips.
-- Plugin lifecycle/configuration/ownership test suite: 57 passed, zero failures/skips.
+- Plugin lifecycle/configuration/ownership test suite: 111 passed, zero failures/skips.
 - Python packaging/distribution suite: 13 passed.
-- Node settings-script suite: 14 passed, exercising the actual embedded JavaScript against mock API/DOM boundaries.
+- Node settings-script suite: 15 passed, exercising the actual embedded JavaScript against mock API/DOM boundaries.
 - Native SkiaSharp 3.119.4 renderer executed; synthetic sample PNGs inspected.
-- Packaged ZIP loaded through a standalone host using Jellyfin 12.4's exact `AssemblyDependencyResolver`/`AssemblyLoadContext` algorithm. Verified discoverable scheduled/post-scan exports and isolated resolution of the packaged core assembly, with no plugin-project reference in the probe host.
+- Packaged ZIP loaded through a standalone host using Jellyfin 12.4's exact `AssemblyDependencyResolver`/`AssemblyLoadContext` algorithm. Verified discoverable scheduled/post-scan and hosted-service exports and isolated resolution of the packaged core assembly, with no plugin-project reference in the probe host.
 - NuGet vulnerability audit reported no vulnerable dependencies for core, plugin, and loader-probe projects using the configured NuGet source.
 
 ## Settings browser checks
@@ -41,9 +41,19 @@ The native renderer's pixel/alpha tests cover all three modes with one through f
 
 Plugin tests verify legacy XML defaults, XML persistence and conversion to render options, mode changes updating plugin-owned images once, unchanged runs skipping work, and custom artwork remaining protected. Chromium exercised all three dropdown choices through Save and reload, numeric enum loading, and the legacy default without an implicit save. Desktop and 390-pixel fixture views were inspected without horizontal overflow; these use fake API boundaries and do not establish live Jellyfin execution. `docs/sample-repeat-modes.png` is actual rendered output from labeled synthetic poster fixtures and was visually inspected.
 
+## Collection-content updates (0.1.3)
+
+Hosted-service tests exercise subscription to collection creation/addition/removal, duplicate-start protection, per-ID quiet-period reset and deduplication, affected-ID-only processing, events received during an active run, configuration checks after the shared processing gate, worker error recovery, and shutdown/unsubscription. These are local boundary tests, not live-server operations. Throwing and deliberately blocked configuration getters prove all three event callbacks return without propagating configuration failures or waiting for configuration I/O; subsequent healthy events recover without replaying discarded work.
+
+Empty-collection tests cover trusted path/hash ownership, custom artwork even with overwrite enabled, changed or uncertain ownership, nested members, missing/corrupt member posters, intervening artwork or membership changes, failed/unverifiable deletion, durable evidence removal, no-op repetition, and regeneration after readdition. The real adapter calls Jellyfin's image-deletion API; a cancellation-during-delete regression verifies completed deletion can retain its durable evidence and safely regenerate on a later run. The host operation is noncancellable once entered, and the final-check-to-mutation race remains documented.
+
+The actual embedded checkbox was exercised in Chromium against fake API boundaries, including default-on behavior, saving an opt-out, and reload. Desktop and 390-pixel fixture views were inspected without horizontal overflow or captured script errors. Node tests also verify older configurations default on and an explicit opt-out persists. The packaged-loader probe checks the new hosted-service export; registration and lifecycle tests separately establish its wiring. None of these checks establishes installation in a live Jellyfin instance.
+
 ## Independent review
 
 The core review found a reproducible word-boundary wrapping issue at minimum size. A separate fix agent added failing regression tests, applied the fix, and ran the full suite. A subsequent independent scoped review passed. Integration review found a TV-series exclusion bug; its fix and the additional corrupt-poster-before-selection regression passed independent re-review. Final scoped review reported no security or logic findings and reran both .NET suites successfully.
+
+For collection-content updates, separate reviews covered listener lifecycle and empty-artwork deletion. The listener review found configuration access could throw or block Jellyfin's collection mutation callbacks. A separate fix agent reproduced nine failing cases, moved configuration access into the managed worker, and restored the full suite. Final independent re-review reported no security or logic findings and reran all 111 plugin tests and 15 settings-script tests successfully.
 
 ## Cross-platform test isolation
 

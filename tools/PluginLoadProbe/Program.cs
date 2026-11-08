@@ -24,12 +24,14 @@ try
         throw new InvalidOperationException("No discoverable scheduled task in package.");
     if (!types.Any(t => typeof(ILibraryPostScanTask).IsAssignableFrom(t) && !t.IsAbstract))
         throw new InvalidOperationException("No discoverable library post-scan task in package.");
+    if (!types.Any(t => typeof(Microsoft.Extensions.Hosting.IHostedService).IsAssignableFrom(t) && !t.IsAbstract))
+        throw new InvalidOperationException("No hosted collection-change service in package.");
     var core = context.LoadFromAssemblyName(new AssemblyName("CollectionImageGenerator.Core"));
     if (AssemblyLoadContext.GetLoadContext(core) != context)
         throw new InvalidOperationException("Core was accidentally resolved from the probe host instead of package.");
     if (core.GetType("CollectionImageGenerator.Core.CollageRenderer") is null)
         throw new InvalidOperationException("Packaged renderer type not found.");
-    Console.WriteLine($"PASS: packaged plugin loads {types.Length} types, task exports, and isolated core using Jellyfin 12.4's resolver.");
+    Console.WriteLine($"PASS: packaged plugin loads {types.Length} types, task and hosted-service exports, and isolated core using Jellyfin 12.4's resolver.");
     context.Unload();
 }
 catch (ReflectionTypeLoadException ex)

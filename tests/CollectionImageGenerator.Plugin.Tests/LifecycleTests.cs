@@ -46,7 +46,7 @@ public sealed class LifecycleTests : IDisposable
         Assert.NotNull(stream);
         using var reader = new StreamReader(stream!);
         var html = reader.ReadToEnd();
-        foreach (var field in new[] { "Enabled", "RunAfterScan", "SelectionMode", "RepeatMode", "EnableText", "TextTemplate", "TextPosition", "FontSize", "Width", "Height", "OverwriteExisting" })
+        foreach (var field in new[] { "Enabled", "RunAfterScan", "RunOnCollectionChanges", "SelectionMode", "RepeatMode", "EnableText", "TextTemplate", "TextPosition", "FontSize", "Width", "Height", "OverwriteExisting" })
             Assert.Contains("id=\"" + field + "\"", html);
         Assert.Contains("ApiClient.getPluginConfiguration", html);
         Assert.Contains("ApiClient.updatePluginConfiguration", html);
