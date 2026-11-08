@@ -8,6 +8,14 @@
     "category": "General",
     "versions": [
       {
+        "version": "0.1.1.0",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://github.com/everyonesoftware/collection-image-generator-jellyfin-plugin/releases/download/v0.1.1/collection-image-generator-0.1.1.zip",
+        "checksum": "862989603c769a02dc0ad957d2a036f8",
+        "timestamp": "2026-11-08T00:22:46.413307Z",
+        "changelog": "Release v0.1.1"
+      },
+      {
         "version": "0.1.0.0",
         "targetAbi": "12.4.0.0",
         "sourceUrl": "https://github.com/everyonesoftware/collection-image-generator-jellyfin-plugin/releases/download/v0.1.0/collection-image-generator-0.1.0.zip",
