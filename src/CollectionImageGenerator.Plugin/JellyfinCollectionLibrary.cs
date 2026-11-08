@@ -1,4 +1,7 @@
+using CollectionImageGenerator.Core;
 using Jellyfin.Data.Enums;
+using MediaBrowser.Controller.Dto;
+using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Library;
@@ -28,6 +31,30 @@ public sealed class JellyfinCollectionLibrary(ILibraryManager library, IProvider
         // The processor excludes nested boxsets from poster selection; never recurse.
         return box.GetLinkedChildren().Concat(box.Children)
             .DistinctBy(item => item.Id).ToArray();
+    }
+
+    public long? GetRuntimeTicks(BaseItem item)
+    {
+        if (item is not Series series) return item.RunTimeTicks > 0 ? item.RunTimeTicks : null;
+        // GetPresentationUniqueKey returns the stored key, or creates one using static host services.
+        // Use that same logical identity when present; absent keys must stay scoped without globals.
+        var key = series.PresentationUniqueKey;
+        if (string.IsNullOrWhiteSpace(key) && series.Id == Guid.Empty) return null;
+        var query = new InternalItemsQuery
+        {
+            IncludeItemTypes = [BaseItemKind.Episode],
+            IsVirtualItem = false,
+            IsMissing = false,
+            DtoOptions = DtoOptions.StoredColumnsOnly
+            // Read-only episode instances: never save these partially hydrated entities.
+        };
+        if (!string.IsNullOrWhiteSpace(key)) query.SeriesPresentationUniqueKey = key;
+        else query.AncestorIds = [series.Id];
+        // A missing episode has no stored path; avoid IsMissingEpisode's host-global derived getters.
+        return RuntimeStatistics.Median(library.GetItemList(query).OfType<Episode>()
+            .Where(episode => episode.ParentIndexNumber != 0 && !episode.IsVirtualItem
+                && !string.IsNullOrEmpty(episode.Path) && episode.RunTimeTicks > 0)
+            .DistinctBy(episode => episode.Id).Select(episode => episode.RunTimeTicks));
     }
 
     public string? GetPrimaryPath(BaseItem item)

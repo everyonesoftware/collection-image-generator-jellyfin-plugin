@@ -34,13 +34,14 @@ public sealed class CollectionProcessor(
             var collections = changedIds is null ? library.GetCollections() : null;
             var ids = changedIds ?? collections!.Select(item => item.Id).ToArray();
             var failures = new List<Exception>();
+            var runtimes = new Dictionary<Guid, long?>(); // Fresh for each full or targeted run.
             for (var index = 0; index < ids.Count; index++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
                     var collection = collections is null ? library.ReloadCollection(ids[index]) : collections[index];
-                    if (collection is not null) await ProcessAsync(collection, config, cancellationToken).ConfigureAwait(false);
+                    if (collection is not null) await ProcessAsync(collection, config, runtimes, cancellationToken).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
                 catch (Exception exception)
@@ -60,7 +61,7 @@ public sealed class CollectionProcessor(
         }
     }
 
-    private async Task ProcessAsync(BaseItem collection, PluginConfiguration config, CancellationToken cancellationToken)
+    private async Task ProcessAsync(BaseItem collection, PluginConfiguration config, Dictionary<Guid, long?> runtimes, CancellationToken cancellationToken)
     {
         if (!ledger.IsTrusted) return;
         var id = collection.Id.ToString("N");
@@ -97,7 +98,14 @@ public sealed class CollectionProcessor(
             var source = await ReadPrimaryAsync(item, cancellationToken).ConfigureAwait(false);
             if (source.Path is null || !source.Readable || source.Hash is null || !CollageRenderer.IsUsablePoster(source.Path)) continue;
             var memberId = item.Id.ToString("N");
-            candidates.Add(new PosterCandidate(memberId, item.Name, item.PremiereDate, source.Path));
+            long? runtime = null;
+            if (config.SelectionMode is SelectionMode.RuntimeShortestFirst or SelectionMode.RuntimeLongestFirst
+                && !runtimes.TryGetValue(item.Id, out runtime))
+            {
+                runtime = library.GetRuntimeTicks(item);
+                runtimes[item.Id] = runtime;
+            }
+            candidates.Add(new PosterCandidate(memberId, item.Name, item.PremiereDate, source.Path, runtime));
             sourceHashes[memberId] = source.Hash;
         }
         var selected = PosterSelector.Select(candidates, config.SelectionMode, id);

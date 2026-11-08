@@ -11,6 +11,7 @@ public interface ICollectionLibrary
     IEnumerable<BaseItem> GetMembers(BaseItem collection);
     // null means no primary metadata, not an unreadable or missing advertised image file.
     string? GetPrimaryPath(BaseItem item);
+    long? GetRuntimeTicks(BaseItem item) => item.RunTimeTicks > 0 ? item.RunTimeTicks : null;
     Task ClearPrimaryAsync(BaseItem item, CancellationToken cancellationToken);
     Task SavePrimaryAsync(BaseItem item, byte[] png, CancellationToken cancellationToken);
 }

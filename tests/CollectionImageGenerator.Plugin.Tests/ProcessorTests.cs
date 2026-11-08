@@ -158,6 +158,13 @@ public sealed partial class ProcessorTests : IDisposable
         public List<BaseItem> Collections { get; } = [];
         public List<BaseItem> Members { get; } = [];
         public Dictionary<Guid, string?> Paths { get; } = [];
+        public Dictionary<Guid, long?> Runtimes { get; } = [];
+        public List<Guid> RuntimeRequests { get; } = [];
+        public long? GetRuntimeTicks(BaseItem item)
+        {
+            RuntimeRequests.Add(item.Id);
+            return Runtimes.GetValueOrDefault(item.Id, item.RunTimeTicks);
+        }
         public int Saves { get; private set; }
         public int Clears { get; private set; }
         public Func<BaseItem, CancellationToken, Task>? ClearOverride { get; set; }

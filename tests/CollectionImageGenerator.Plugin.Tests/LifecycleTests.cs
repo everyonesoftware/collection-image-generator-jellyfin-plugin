@@ -57,6 +57,8 @@ public sealed class LifecycleTests : IDisposable
         Assert.Contains("ApiClient.startScheduledTask", html);
         Assert.Contains("Warning:", html);
         Assert.Contains("value=\"StableRandom\"", html);
+        Assert.Contains("value=\"RuntimeShortestFirst\"", html);
+        Assert.Contains("value=\"RuntimeLongestFirst\"", html);
         Assert.Contains("value=\"Middle\"", html);
     }
 

@@ -5,7 +5,7 @@ A server-side Jellyfin **12.4** plugin that builds portrait collection covers fr
 ## Features
 
 - 1000×1500 portrait PNG covers, proportional cover-cropping, no stretching.
-- Select four distinct items by **release date**, **alphabetical title**, or **stable random** order. Stable random doesn't shuffle on every run.
+- Select four distinct items by **release date**, **alphabetical title**, **stable random**, or **runtime (shortest or longest first)**. Stable random doesn't shuffle on every run.
 - Choose how to fill collections with fewer than four usable posters: **Simple repeat** (default), **Repeat checkered**, or **Do not repeat** with transparent unused quadrants. Empty collections clear only verified, unchanged plugin-generated artwork.
 - Optional centered text with **top**, **middle**, or **bottom** placement, word wrapping, and a dark readability band. `{name}` inserts the collection title; a custom template is supported.
 - Bundled font, so text doesn't depend on fonts installed in the Docker image.
@@ -75,7 +75,7 @@ The archive deliberately **does not** ship Jellyfin, .NET, or SkiaSharp assembli
 | Enabled | On | Allow generation |
 | Run after library scan | On | Generate after a completed scan |
 | Regenerate when collection contents change | On | Recheck only affected collections after creation, additions, or removals; combine rapid edits after about five quiet seconds |
-| Poster selection | Release date | Earliest release first, alphabetical, or stable random |
+| Member poster order | Release date | Earliest release first, alphabetical, stable random, runtime shortest first, or runtime longest first |
 | Fewer than four items | Simple repeat | Repeat sequentially, use a two-poster checkerboard, or leave unused quadrants transparent |
 | Add text | Off | Draw the configured title text |
 | Text template | `{name}` | Collection title, custom text, or both |
@@ -84,6 +84,14 @@ The archive deliberately **does not** ship Jellyfin, .NET, or SkiaSharp assembli
 | Replace existing artwork | Off | Explicitly permit overwriting artwork not owned by this plugin |
 
 The scheduler's recurrence is managed in Jellyfin's Scheduled Tasks screen. Saving settings does not immediately rewrite your entire collection library. To request one run, save any edits and click **Generate now** in the **Run once** section. It uses saved settings, respects artwork protection, and processes all eligible collections without changing scheduled triggers. The plugin must be enabled in saved settings. The page reports an already-running/cancelling task or a request failure; **Generation requested** is not a completion result. Monitor progress and results in Scheduled Tasks.
+
+### Runtime ordering
+
+**Runtime — shortest first** and **Runtime — longest first** use a movie's recorded runtime or a TV show's **median episode runtime**. The median is calculated from available non-special episodes in your library; virtual/missing episodes and missing, zero, or negative runtimes are excluded. For an even number of valid episodes, the two middle values are averaged. This is a typical episode length, not the show's total duration, and no average/median setting is added.
+
+Items without a usable runtime sort **last in both directions**. Equal runtimes use title and item ID as stable tie-breakers. Only members with usable local primary posters can be selected, and the existing four-item limit and custom-artwork protection remain unchanged. Release-date ordering is still the default for existing and new configurations.
+
+Runtimes are recalculated during generation runs. No episode-added listener is registered; use **Generate now**, a scheduled run, an enabled post-scan run, or an existing collection-membership trigger after episode/runtime metadata changes. If the selected posters and their order stay the same, runtime-only changes do not unnecessarily rewrite the collage.
 
 ### Automatic collection-content updates
 

@@ -4,10 +4,10 @@
 
 - .NET SDK 10.0.403; build targets .NET 10 and Jellyfin packages 12.4.0.
 - Full Release solution build completed with zero warnings/errors.
-- Core test suite: 92 passed, zero failures/skips.
-- Plugin lifecycle/configuration/ownership test suite: 111 passed, zero failures/skips.
+- Core test suite: 104 passed, zero failures/skips.
+- Plugin lifecycle/configuration/ownership test suite: 130 passed, zero failures/skips.
 - Python packaging/distribution suite: 13 passed.
-- Node settings-script suite: 15 passed, exercising the actual embedded JavaScript against mock API/DOM boundaries.
+- Node settings-script suite: 16 passed, exercising the actual embedded JavaScript against mock API/DOM boundaries.
 - Native SkiaSharp 3.119.4 renderer executed; synthetic sample PNGs inspected.
 - Packaged ZIP loaded through a standalone host using Jellyfin 12.4's exact `AssemblyDependencyResolver`/`AssemblyLoadContext` algorithm. Verified discoverable scheduled/post-scan and hosted-service exports and isolated resolution of the packaged core assembly, with no plugin-project reference in the probe host.
 - NuGet vulnerability audit reported no vulnerable dependencies for core, plugin, and loader-probe projects using the configured NuGet source.
@@ -49,11 +49,21 @@ Empty-collection tests cover trusted path/hash ownership, custom artwork even wi
 
 The actual embedded checkbox was exercised in Chromium against fake API boundaries, including default-on behavior, saving an opt-out, and reload. Desktop and 390-pixel fixture views were inspected without horizontal overflow or captured script errors. Node tests also verify older configurations default on and an explicit opt-out persists. The packaged-loader probe checks the new hosted-service export; registration and lifecycle tests separately establish its wiring. None of these checks establishes installation in a live Jellyfin instance.
 
+## Runtime ordering (0.1.4)
+
+Core tests preserve existing enum values and exercise shortest/longest ordering, invalid runtimes last in both directions, deterministic ties and duplicate representatives, the four-item limit, and odd/even positive-only medians including overflow boundaries. Adapter tests verify positive movie runtime without episode queries and TV episode queries scoped by stored logical series identity or a safe ancestor-ID fallback. Read-only hydration, specials/virtual/missing/invalid episode filtering, duplicate IDs, and no aggregate-series fallback are covered without invoking host-global derived metadata getters.
+
+Processor tests render real synthetic poster fixtures and check quadrant colors in both runtime directions, regeneration and unchanged-output skipping, custom-artwork protection, no runtime reads for older ordering modes or unusable posters, and per-run caching that refreshes on later full or targeted runs. No episode-added listener or average/median setting was introduced.
+
+The actual embedded settings HTML was exercised in Chromium with fake API boundaries: numeric values 3/4 loaded the new options, both named choices survived Save and reload, unrelated future configuration remained intact, and no generation request occurred. Loading calls balanced with no captured script errors. Desktop and 390-pixel fixture views had no horizontal overflow; this does not establish live Jellyfin styling or execution. Node tests cover numeric/named values for all five ordering modes, and the compiled embedded page asserts both new option values.
+
 ## Independent review
 
 The core review found a reproducible word-boundary wrapping issue at minimum size. A separate fix agent added failing regression tests, applied the fix, and ran the full suite. A subsequent independent scoped review passed. Integration review found a TV-series exclusion bug; its fix and the additional corrupt-poster-before-selection regression passed independent re-review. Final scoped review reported no security or logic findings and reran both .NET suites successfully.
 
 For collection-content updates, separate reviews covered listener lifecycle and empty-artwork deletion. The listener review found configuration access could throw or block Jellyfin's collection mutation callbacks. A separate fix agent reproduced nine failing cases, moved configuration access into the managed worker, and restored the full suite. Final independent re-review reported no security or logic findings and reran all 111 plugin tests and 15 settings-script tests successfully.
+
+The runtime-ordering review covered the full implementation, tests, embedded page, and verification notes with no findings. It checked the matching host source for ancestor-query behavior and independently reran 104 core tests, 130 plugin tests, and all 16 settings-script tests successfully.
 
 ## Cross-platform test isolation
 

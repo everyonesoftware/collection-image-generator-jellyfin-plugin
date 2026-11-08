@@ -24,8 +24,10 @@
                     <option value="ReleaseDate">Release date (oldest first)</option>
                     <option value="Alphabetical">Alphabetical</option>
                     <option value="StableRandom">Stable random</option>
+                    <option value="RuntimeShortestFirst">Runtime — shortest first</option>
+                    <option value="RuntimeLongestFirst">Runtime — longest first</option>
                 </select>
-                <div class="fieldDescription">The same collection and members produce the same stable-random order. Choose how to fill unused quadrants below.</div>
+                <div class="fieldDescription">Runtime uses movie duration or median episode duration for TV shows, excluding specials and missing/invalid runtimes. Unknown runtimes sort last in either direction. Runtime is recalculated when generation runs, not when an episode is added. Stable random stays consistent for the same collection and members. Choose how to fill unused quadrants below.</div>
             </div>
             <div class="selectContainer">
                 <label class="selectLabel" for="RepeatMode">Fewer than four items</label>
@@ -94,7 +96,7 @@
         const numbers = ['FontSize', 'Width', 'Height'];
         const strings = ['SelectionMode', 'RepeatMode', 'TextTemplate', 'TextPosition'];
         const defaults = { Enabled: true, RunAfterScan: true, RunOnCollectionChanges: true, EnableText: false, OverwriteExisting: false, FontSize: 80, Width: 1000, Height: 1500, SelectionMode: 'ReleaseDate', RepeatMode: 'SimpleRepeat', TextTemplate: '{name}', TextPosition: 'Bottom' };
-        const enumNames = { SelectionMode: ['ReleaseDate', 'Alphabetical', 'StableRandom'], RepeatMode: ['SimpleRepeat', 'RepeatCheckered', 'NoRepeat'], TextPosition: ['Top', 'Middle', 'Bottom'] };
+        const enumNames = { SelectionMode: ['ReleaseDate', 'Alphabetical', 'StableRandom', 'RuntimeShortestFirst', 'RuntimeLongestFirst'], RepeatMode: ['SimpleRepeat', 'RepeatCheckered', 'NoRepeat'], TextPosition: ['Top', 'Middle', 'Bottom'] };
         const field = name => page.querySelector('#' + name);
         let loaded = false;
         let saving = false;

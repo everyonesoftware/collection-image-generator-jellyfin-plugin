@@ -78,6 +78,23 @@ test('repeat mode handles numeric and named enums and survives save and reload',
   }
 });
 
+test('runtime poster orders have both dropdown choices and load numeric or named enums through save and reload',async()=>{
+  const select=html.match(/<select\b[^>]*id="SelectionMode"[^>]*>([\s\S]*?)<\/select>/i)?.[1];
+  assert.ok(select,'Member poster order dropdown is missing');
+  const modes=['ReleaseDate','Alphabetical','StableRandom','RuntimeShortestFirst','RuntimeLongestFirst'];
+  for(const mode of modes) assert.match(select,new RegExp('<option\\b[^>]*value="'+mode+'"'));
+  for(const [index,mode] of modes.entries()){
+    for(const response of [index,mode]){
+      const f=fixture({...defaults,SelectionMode:response});await f.load();
+      assert.equal(f.field('SelectionMode').value,mode);
+      const next=modes[(index+1)%modes.length];f.field('SelectionMode').value=next;
+      await f.save();assert.equal(f.stored.SelectionMode,next);assert.equal(f.stored.FutureField,'preserve-me');
+      f.field('SelectionMode').value='unsaved';await f.load();assert.equal(f.field('SelectionMode').value,next);
+      assert.equal(f.state.loading,0);assert.deepEqual(f.state.started,[]);
+    }
+  }
+});
+
 test('collection-change generation defaults on for older configs and persists an explicit opt-out',async()=>{
   const f=fixture();await f.load();
   assert.ok(f.field('RunOnCollectionChanges'),'Automatic collection-change checkbox is missing');
