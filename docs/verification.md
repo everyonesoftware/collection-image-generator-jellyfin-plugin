@@ -6,8 +6,8 @@
 - Full Release solution build completed with zero warnings/errors.
 - Core test suite: 52 passed, zero failures/skips.
 - Plugin lifecycle/configuration/ownership test suite: 51 passed, zero failures/skips.
-- Python packaging suite: 2 passed.
-- Node settings-script suite: 4 passed, exercising the actual embedded JavaScript against mock API/DOM boundaries.
+- Python packaging/distribution suite: 13 passed.
+- Node settings-script suite: 12 passed, exercising the actual embedded JavaScript against mock API/DOM boundaries.
 - Native SkiaSharp 3.119.4 renderer executed; synthetic sample PNGs inspected.
 - Packaged ZIP loaded through a standalone host using Jellyfin 12.4's exact `AssemblyDependencyResolver`/`AssemblyLoadContext` algorithm. Verified discoverable scheduled/post-scan exports and isolated resolution of the packaged core assembly, with no plugin-project reference in the probe host.
 - NuGet vulnerability audit reported no vulnerable dependencies for core, plugin, and loader-probe projects using the configured NuGet source.
@@ -28,6 +28,12 @@ Verified:
 - Save failure displays an error and restores the Save button.
 - Load failure disables Save to prevent accidental default overwrites.
 - No captured JavaScript errors or unhandled promise rejections; loading calls balance.
+
+## Settings-page run-once action (0.1.1)
+
+Chromium exercised the actual embedded HTML with the official API client's task-list/start method bodies and deliberately fake server boundaries. The real client methods produced `GET ScheduledTasks` and `POST ScheduledTasks/Running/collection-images` for the fixture task ID. This was not a live-server execution.
+
+Verified successful request feedback without a configuration save, an already-running task without a second start, start-request error recovery, blocked duplicate clicks and Save during an in-flight request, and balanced loading indicators with no captured script errors. Desktop and 390-pixel-wide fixture views were inspected; neither had horizontal overflow. Jellyfin host styling was not included in this fixture. Node tests additionally cover saved-disabled configuration, discovery/state failures, numeric enum values, and concurrency in both directions. The compiled embedded page and actual assembly version are checked by the .NET lifecycle suite.
 
 ## Independent review
 

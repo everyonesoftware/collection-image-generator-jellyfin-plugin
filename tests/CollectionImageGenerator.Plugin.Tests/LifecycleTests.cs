@@ -52,6 +52,9 @@ public sealed class LifecycleTests : IDisposable
         Assert.Contains("ApiClient.updatePluginConfiguration", html);
         Assert.Contains("f8a5df17-f0b4-4eab-9144-a46ea55c2b28", html);
         Assert.Contains("#/dashboard/tasks", html);
+        Assert.Contains("id=\"GenerateNow\"", html);
+        Assert.Contains("ApiClient.getScheduledTasks", html);
+        Assert.Contains("ApiClient.startScheduledTask", html);
         Assert.Contains("Warning:", html);
         Assert.Contains("value=\"StableRandom\"", html);
         Assert.Contains("value=\"Middle\"", html);
@@ -62,7 +65,10 @@ public sealed class LifecycleTests : IDisposable
     {
         var plugin = CreatePlugin();
         Assert.Equal(Guid.Parse("f8a5df17-f0b4-4eab-9144-a46ea55c2b28"), plugin.Id);
-        Assert.Equal(new Version(0, 1, 0, 0), plugin.Version);
+        var project = System.Xml.Linq.XDocument.Load(Path.Combine(AppContext.BaseDirectory, "PluginProjectMetadata.xml"));
+        var expectedVersion = Version.Parse(project.Descendants("AssemblyVersion").Single().Value);
+        Assert.Equal(expectedVersion, plugin.Version);
+        Assert.Equal(project.Descendants("Version").Single().Value + ".0", plugin.Version.ToString());
         Assert.True(plugin.Configuration.Enabled);
         plugin.UpdateConfiguration(new PluginConfiguration { Enabled = false, RunAfterScan = false, EnableText = true, FontSize = 91, TextTemplate = "Welcome {name}", OverwriteExisting = true });
         var restored = CreatePlugin();

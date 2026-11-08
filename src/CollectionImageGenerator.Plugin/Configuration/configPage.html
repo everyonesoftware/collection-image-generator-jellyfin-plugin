@@ -60,8 +60,11 @@
             </fieldset>
             <div><button is="emby-button" type="submit" class="raised button-submit block"><span>Save</span></button></div>
         </form>
-        <h2>Run manually</h2>
-        <p>Save settings, then open scheduled tasks and run <strong>Generate collection images</strong>. The daily default is 03:00 server-local time; you can change its trigger there.</p>
+        <h2>Run once</h2>
+        <p>Generate images once for all eligible collections using the saved settings. Save any changes above first. Existing artwork protection still applies.</p>
+        <p><button is="emby-button" type="button" id="GenerateNow" class="raised block" disabled><span>Generate now</span></button></p>
+        <p id="CollectionImageGeneratorRunStatus" role="status" aria-live="polite"></p>
+        <p>The daily default is 03:00 server-local time. Starting a run here does not change scheduled triggers. Open scheduled tasks to monitor progress or change the schedule.</p>
         <p><a is="emby-linkbutton" class="raised button-link" href="#/dashboard/tasks">Open scheduled tasks</a></p>
         <p id="CollectionImageGeneratorStatus" role="status" aria-live="polite"></p>
     </div></div>
@@ -72,6 +75,8 @@
         const page = document.querySelector('#CollectionImageGeneratorConfigPage');
         const form = page.querySelector('#CollectionImageGeneratorConfigForm');
         const status = page.querySelector('#CollectionImageGeneratorStatus');
+        const runStatus = page.querySelector('#CollectionImageGeneratorRunStatus');
+        const runButton = page.querySelector('#GenerateNow');
         const booleans = ['Enabled', 'RunAfterScan', 'EnableText', 'OverwriteExisting'];
         const numbers = ['FontSize', 'Width', 'Height'];
         const strings = ['SelectionMode', 'TextTemplate', 'TextPosition'];
@@ -79,11 +84,17 @@
         const enumNames = { SelectionMode: ['ReleaseDate', 'Alphabetical', 'StableRandom'], TextPosition: ['Top', 'Middle', 'Bottom'] };
         const field = name => page.querySelector('#' + name);
         let loaded = false;
+        let saving = false;
+        let running = false;
         const save = form.querySelector('button[type="submit"]');
-        save.disabled = true;
+        function updateActions() {
+            save.disabled = !loaded || saving || running;
+            runButton.disabled = !loaded || saving || running;
+        }
+        updateActions();
         page.addEventListener('pageshow', async function () {
             loaded = false;
-            save.disabled = true;
+            updateActions();
             Dashboard.showLoadingMsg();
             try {
                 const config = await ApiClient.getPluginConfiguration(pluginId);
@@ -94,20 +105,59 @@
                     field(name).value = value;
                 });
                 loaded = true;
-                save.disabled = false;
+                updateActions();
                 status.textContent = '';
             } catch (error) {
                 status.textContent = 'Could not load settings. Reload this page before saving.';
             } finally { Dashboard.hideLoadingMsg(); }
         });
+        runButton.addEventListener('click', async function () {
+            if (!loaded || saving || running) return;
+            running = true;
+            updateActions();
+            runStatus.textContent = 'Requesting generation…';
+            Dashboard.showLoadingMsg();
+            try {
+                // Do not silently save edits or override a saved disabled configuration.
+                const config = await ApiClient.getPluginConfiguration(pluginId);
+                if (config.Enabled === false) {
+                    runStatus.textContent = 'Enable the plugin and save settings before running generation.';
+                    return;
+                }
+                const tasks = await ApiClient.getScheduledTasks();
+                const matches = Array.isArray(tasks) ? tasks.filter(candidate => candidate.Key === 'CollectionImageGenerator') : [];
+                if (matches.length !== 1 || typeof matches[0].Id !== 'string' || !matches[0].Id) {
+                    runStatus.textContent = 'Generation task not found or ambiguous. Restart Jellyfin and check scheduled tasks.';
+                    return;
+                }
+                const task = matches[0];
+                if (task.State === 'Running' || task.State === 2 || task.State === 'Cancelling' || task.State === 1) {
+                    runStatus.textContent = 'Generation is already running or cancelling. Check scheduled tasks before starting another run.';
+                    return;
+                }
+                if (task.State !== 'Idle' && task.State !== 0) {
+                    runStatus.textContent = 'Could not determine the generation task state. Check scheduled tasks before retrying.';
+                    return;
+                }
+                await ApiClient.startScheduledTask(task.Id);
+                runStatus.textContent = 'Generation requested. Open scheduled tasks to monitor progress and check the result.';
+            } catch (error) {
+                runStatus.textContent = 'Generation could not be requested. Check your connection, administrator permissions, and scheduled tasks before retrying.';
+            } finally {
+                running = false;
+                updateActions();
+                Dashboard.hideLoadingMsg();
+            }
+        });
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
-            if (!loaded || !form.reportValidity()) return;
+            if (!loaded || saving || running || !form.reportValidity()) return;
             if (field('Width').valueAsNumber * field('Height').valueAsNumber > 8388608) {
                 status.textContent = 'Output must not exceed 8,388,608 pixels. Reduce width or height.';
                 return;
             }
-            save.disabled = true;
+            saving = true;
+            updateActions();
             Dashboard.showLoadingMsg();
             try {
                 const config = await ApiClient.getPluginConfiguration(pluginId);
@@ -120,7 +170,8 @@
             } catch (error) {
                 status.textContent = 'Settings could not be saved. Check your connection and server logs.';
             } finally {
-                save.disabled = false;
+                saving = false;
+                updateActions();
                 Dashboard.hideLoadingMsg();
             }
         });

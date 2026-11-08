@@ -11,7 +11,9 @@ const defaults = {Enabled:true,RunAfterScan:true,EnableText:false,OverwriteExist
 
 function fixture(config = defaults) {
   let stored = structuredClone(config);
-  const state = {failLoad:false,failSave:false,writes:0,loading:0};
+  const state = {failLoad:false,failSave:false,failTasks:false,failStart:false,writes:0,loading:0,started:[],
+    tasks:[{Id:'unrelated-task',Key:'OtherPlugin',Name:'Generate collection images',State:'Idle'},
+           {Id:'collection-images-task',Key:'CollectionImageGenerator',Name:'Localized task name',State:'Idle'}]};
   const elements = new Map();
   for (const [, id] of html.matchAll(/\bid="([^"]+)"/g)) elements.set('#'+id, {value:'',checked:false,disabled:false,textContent:''});
   const button = {disabled:false};
@@ -30,13 +32,16 @@ function fixture(config = defaults) {
     Dashboard:{showLoadingMsg(){state.loading++},hideLoadingMsg(){state.loading--},processPluginConfigurationUpdateResult(){}},
     ApiClient:{
       async getPluginConfiguration(id){assert.equal(id,'f8a5df17-f0b4-4eab-9144-a46ea55c2b28');if(state.failLoad)throw Error('Mock load failure');return structuredClone(stored);},
-      async updatePluginConfiguration(id,value){if(state.failSave)throw Error('Mock save failure');stored=structuredClone(value);state.writes++;return{};}
+      async updatePluginConfiguration(id,value){state.saveCalls=(state.saveCalls??0)+1;if(state.saveBarrier)await state.saveBarrier;if(state.failSave)throw Error('Mock save failure');stored=structuredClone(value);state.writes++;return{};},
+      async getScheduledTasks(){if(state.failTasks)throw Error('Mock task-list failure');return structuredClone(state.tasks);},
+      async startScheduledTask(id){if(state.failStart)throw Error('Mock start failure');state.started.push(id);if(state.startBarrier)await state.startBarrier;}
     }
   };
   vm.runInNewContext(script, context, {filename:'embedded-configPage.js'});
   return {state,button,field:id=>elements.get('#'+id),get stored(){return stored;},
     load:()=>page.events.get('pageshow')(),
-    save:()=>form.events.get('submit')({preventDefault(){}})};
+    save:()=>form.events.get('submit')({preventDefault(){}}),
+    run:()=>{const action=elements.get('#GenerateNow');assert.ok(action,'Generate now button is missing');const handler=action.events.get('click');assert.equal(typeof handler,'function','Generate now is not wired');return handler();}};
 }
 
 test('loads numeric enums and safe defaults, saves typed fields, preserves unknown fields, then reloads',async()=>{
@@ -60,6 +65,85 @@ test('oversized dimensions never reach update API',async()=>{
 test('load failure leaves save disabled and refuses submission',async()=>{
   const f=fixture();f.state.failLoad=true;await f.load();await f.save();
   assert.equal(f.button.disabled,true);assert.equal(f.state.writes,0);assert.match(f.field('CollectionImageGeneratorStatus').textContent,/Could not load/);assert.equal(f.state.loading,0);
+});
+
+test('Generate now starts only the task with this plugin key and uses saved settings without writing',async()=>{
+  const f=fixture();await f.load();
+  f.field('TextTemplate').value='unsaved edit';
+  await f.run();
+  assert.deepEqual(f.state.started,['collection-images-task']);
+  assert.equal(f.state.writes,0);
+  assert.equal(f.stored.TextTemplate,'{name}');
+  assert.match(f.field('CollectionImageGeneratorRunStatus').textContent,/requested/i);
+  assert.doesNotMatch(f.field('CollectionImageGeneratorRunStatus').textContent,/complete/i);
+  assert.equal(f.state.loading,0);
+});
+
+test('Generate now refuses running, cancelling, unknown, or missing task states',async()=>{
+  for(const state of ['Running','Cancelling',2,1,'Unexpected',null]){
+    const f=fixture();await f.load();f.state.tasks[1].State=state;await f.run();
+    assert.deepEqual(f.state.started,[],String(state));
+    assert.match(f.field('CollectionImageGeneratorRunStatus').textContent,/already|state/i);
+  }
+  for(const tasks of [[],[{Id:'wrong-task',Key:'OtherPlugin',State:'Idle'}]]){
+    const f=fixture();await f.load();f.state.tasks=tasks;await f.run();
+    assert.deepEqual(f.state.started,[]);
+    assert.match(f.field('CollectionImageGeneratorRunStatus').textContent,/not found|restart/i);
+  }
+});
+
+test('Generate now stays disabled until settings load and respects saved disabled configuration',async()=>{
+  const f=fixture();assert.equal(f.field('GenerateNow').disabled,true);await f.run();assert.deepEqual(f.state.started,[]);
+  f.state.failLoad=true;await f.load();assert.equal(f.field('GenerateNow').disabled,true);await f.run();assert.deepEqual(f.state.started,[]);
+  const disabled=fixture({...defaults,Enabled:false});await disabled.load();disabled.field('Enabled').checked=true;
+  await disabled.run();assert.deepEqual(disabled.state.started,[]);
+  assert.match(disabled.field('CollectionImageGeneratorRunStatus').textContent,/enable.*save/i);
+});
+
+test('Generate now catches task-list and start failures and restores controls for retry',async()=>{
+  for(const flag of ['failTasks','failStart','failLoad']){
+    const f=fixture();await f.load();f.state[flag]=true;await f.run();
+    assert.deepEqual(f.state.started,[]);
+    assert.match(f.field('CollectionImageGeneratorRunStatus').textContent,/could not.*request/i);
+    assert.equal(f.field('GenerateNow').disabled,false);assert.equal(f.button.disabled,false);assert.equal(f.state.loading,0);
+    f.state[flag]=false;await f.run();assert.deepEqual(f.state.started,['collection-images-task']);
+  }
+});
+
+test('Generate now blocks duplicate starts and settings saves while a request is in flight',async()=>{
+  const f=fixture();await f.load();let release;
+  f.state.startBarrier=new Promise(resolve=>{release=resolve;});
+  const pending=f.run();await new Promise(setImmediate);
+  assert.equal(f.field('GenerateNow').disabled,true);assert.equal(f.button.disabled,true);
+  await f.run();await f.save();assert.deepEqual(f.state.started,['collection-images-task']);assert.equal(f.state.writes,0);
+  release();await pending;
+  assert.equal(f.field('GenerateNow').disabled,false);assert.equal(f.button.disabled,false);assert.equal(f.state.loading,0);
+});
+
+test('a pending settings save blocks Generate now and duplicate saves',async()=>{
+  const f=fixture();await f.load();let release;
+  f.state.saveBarrier=new Promise(resolve=>{release=resolve;});
+  const pending=f.save();await new Promise(setImmediate);
+  assert.equal(f.button.disabled,true);assert.equal(f.field('GenerateNow').disabled,true);
+  await f.run();await f.save();
+  assert.deepEqual(f.state.started,[]);assert.equal(f.state.saveCalls,1);assert.equal(f.state.writes,0);
+  release();await pending;
+  assert.equal(f.state.writes,1);assert.equal(f.button.disabled,false);assert.equal(f.field('GenerateNow').disabled,false);assert.equal(f.state.loading,0);
+});
+
+test('Generate now refuses ambiguous or malformed task discovery without a start request',async()=>{
+  const task={Id:'collection-images-task',Key:'CollectionImageGenerator',State:'Idle'};
+  for(const tasks of [[task,{...task,Id:'duplicate'}],[{...task,Id:''}],[{Key:task.Key,State:'Idle'}],[{Id:task.Id,Key:task.Key}],{},null]){
+    const f=fixture();await f.load();f.state.tasks=tasks;await f.run();
+    assert.deepEqual(f.state.started,[]);
+    assert.match(f.field('CollectionImageGeneratorRunStatus').textContent,/not found|ambiguous|state/i);
+    assert.equal(f.field('GenerateNow').disabled,false);assert.equal(f.state.loading,0);
+  }
+});
+
+test('Generate now supports an idle numeric enum response',async()=>{
+  const f=fixture();await f.load();f.state.tasks[1].State=0;await f.run();
+  assert.deepEqual(f.state.started,['collection-images-task']);
 });
 
 test('save failure reports error and re-enables save without changing persisted config',async()=>{
